@@ -25,8 +25,8 @@ class MainViewModel @Inject constructor(private val characterUseCases: Character
     private val _characters: MutableStateFlow<PagingData<CharacterModel>> = MutableStateFlow(PagingData.from(emptyList()))
     val characters: StateFlow<PagingData<CharacterModel>> = _characters
 
-    private val nameFilter = MutableStateFlow("")
-    private val statusFilter: MutableStateFlow<CharacterStatus?> = MutableStateFlow(null)
+    val nameFilter = MutableStateFlow("")
+    val statusFilter: MutableStateFlow<CharacterStatus?> = MutableStateFlow(null)
 
     private val _selectedCharacter: MutableStateFlow<UIState<CharacterModel>> = MutableStateFlow(UIState.Loading)
     val selectedCharacter: StateFlow<UIState<CharacterModel>> = _selectedCharacter
