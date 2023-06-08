@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.gmail.uli153.rickmortyandulises.data.entities.CharacterEntity
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CharacterDao {

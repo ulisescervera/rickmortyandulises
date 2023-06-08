@@ -4,7 +4,6 @@ import androidx.room.TypeConverter
 import com.gmail.uli153.rickmortyandulises.data.entities.CharacterLocation
 import com.gmail.uli153.rickmortyandulises.data.entities.CharacterOrigin
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 
 class Converters {

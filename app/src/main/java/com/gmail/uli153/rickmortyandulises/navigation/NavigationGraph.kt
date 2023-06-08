@@ -26,7 +26,7 @@ fun NavigationGraph(
         }
 
         composable(NavigationItem.Detail.route) {
-            CharacterDetailScreen(padding)
+            CharacterDetailScreen(padding, mainViewModel)
         }
     }
 }
