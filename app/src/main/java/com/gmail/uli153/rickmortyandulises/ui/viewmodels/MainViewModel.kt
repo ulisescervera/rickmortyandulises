@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,14 +34,14 @@ class MainViewModel @Inject constructor(private val characterUseCases: Character
     private var filtersJob: Job? = null
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val filters = combine(nameFilter, statusFilter) { name, status ->
                 Filters(name, status)
             }
             filters.collectLatest {
                 filtersJob?.cancel()
                 val characters = characterUseCases.getAllCharacters(it.name, it.status).cachedIn(viewModelScope)
-                filtersJob = viewModelScope.launch(Dispatchers.Main) {
+                filtersJob = viewModelScope.launch(Dispatchers.IO) {
                     characters.collectLatest {
                         _characters.value = it
                     }
@@ -51,12 +52,14 @@ class MainViewModel @Inject constructor(private val characterUseCases: Character
 
     fun selectCharacter(id: Long) {
         _selectedCharacter.value = UIState.Loading
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             val character = characterUseCases.getCharacterById(id)
-            if (character != null) {
-                _selectedCharacter.value = UIState.Success(character)
-            } else {
-                _selectedCharacter.value = UIState.Error(IllegalArgumentException("Character not found"))
+            withContext(Dispatchers.Main) {
+                if (character != null) {
+                    _selectedCharacter.value = UIState.Success(character)
+                } else {
+                    _selectedCharacter.value = UIState.Error(IllegalArgumentException("Character not found"))
+                }
             }
         }
     }

@@ -7,4 +7,7 @@ object Dimens {
     val vMargin = 16.dp
     val rowCornerRadius = 8.dp
     val rowVSpace = 12.dp
+    val navigationBarHeight = 52.dp
+    val bottomNavigationMarginBottom = 10.dp
+    val navigationBarHorizontalMargin = hMargin
 }

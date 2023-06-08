@@ -22,11 +22,11 @@ fun NavigationGraph(
     }
     NavHost(navController, startDestination = NavigationItem.Home.route) {
         composable(NavigationItem.Home.route) {
-            CharacterListScreen(mainViewModel, onCharacterClicked)
+            CharacterListScreen(padding, mainViewModel, onCharacterClicked)
         }
 
         composable(NavigationItem.Detail.route) {
-            CharacterDetailScreen()
+            CharacterDetailScreen(padding)
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.gmail.uli153.rickmortyandulises.ui.theme
 
 import android.app.Activity
+import androidx.compose.ui.graphics.Color
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -13,6 +14,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 
 //private val DarkColorScheme = darkColorScheme(
 //    primary = Green900,
@@ -28,10 +30,11 @@ import androidx.core.view.ViewCompat
 //    onError = Gray200
 //)
 
-private val DarkColorScheme = lightColorScheme(
-    primary = Green400,
+
+private val LightColorScheme = lightColorScheme(
+    primary = Color(0xFF97ce4c),
     onPrimary = White,
-    secondary = Lime400,
+    secondary = Color(0xFFe89ac7),
     onSecondary = White,
     tertiary = Orange400,
     onTertiary = White,
@@ -42,19 +45,7 @@ private val DarkColorScheme = lightColorScheme(
     onError = Gray900
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Green400,
-    onPrimary = White,
-    secondary = Lime400,
-    onSecondary = White,
-    tertiary = Orange400,
-    onTertiary = White,
-    background = Gray100,
-    surface = White,
-    onSurface = Gray900,
-    error = DeepOrange900,
-    onError = Gray900
-)
+private val DarkColorScheme = LightColorScheme
 
 @Composable
 fun RMUTheme(
@@ -74,8 +65,9 @@ fun RMUTheme(
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
-            (view.context as Activity).window.statusBarColor = colorScheme.primary.toArgb()
-            ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = darkTheme
+            val window = (view.context as Activity).window
+            window.statusBarColor = colorScheme.background.toArgb()
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = true
         }
     }
 

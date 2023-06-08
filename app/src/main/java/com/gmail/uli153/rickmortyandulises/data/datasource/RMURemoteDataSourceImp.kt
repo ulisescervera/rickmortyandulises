@@ -20,7 +20,7 @@ class RMURemoteDataSourceImp(
         return Pager(
             config= PagingConfig(pageSize = 20),
             remoteMediator = RMURemoteMediator(database, apiService, name, status),
-            pagingSourceFactory = { database.characterDao().getAllBy( ) }
+            pagingSourceFactory = { database.characterDao().getAllBy(name, status) }
         ).flow
     }
 
