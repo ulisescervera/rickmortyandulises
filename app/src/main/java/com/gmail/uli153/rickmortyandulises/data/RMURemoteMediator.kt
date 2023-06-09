@@ -7,17 +7,30 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.gmail.uli153.rickmortyandulises.data.entities.CharacterEntity
+import com.gmail.uli153.rickmortyandulises.utils.PreferenceUtils
 import retrofit2.HttpException
+import java.util.Date
 
+typealias RMUCachePolicy = Long
 @OptIn(ExperimentalPagingApi::class)
 class RMURemoteMediator(
+    private val preferenceUtils: PreferenceUtils,
     private val database: RMUDatabase,
     private val apiService: ApiService,
+    private val cachePolicy: RMUCachePolicy,
     private val name: String,
     private val status: String?
 ) : RemoteMediator<Int, CharacterEntity>() {
 
-    //todo remove old entities
+    override suspend fun initialize(): InitializeAction {
+        val lastUpdate = preferenceUtils.getCharacterRefreshDate() ?: return InitializeAction.LAUNCH_INITIAL_REFRESH
+        val timeSinceLastUpdate = lastUpdate.time - Date().time
+        if (timeSinceLastUpdate > cachePolicy) {
+            return InitializeAction.LAUNCH_INITIAL_REFRESH
+        }
+        return InitializeAction.SKIP_INITIAL_REFRESH
+    }
+
     override suspend fun load(
         loadType: LoadType,
         state: PagingState<Int, CharacterEntity>
@@ -45,6 +58,10 @@ class RMURemoteMediator(
                         database.characterDao().clearAll()
                     }
                     database.characterDao().insertAll(characters)
+                }
+
+                if (loadType == LoadType.REFRESH) {
+                    preferenceUtils.updateCharacterRefreshDate()
                 }
 
                 return MediatorResult.Success(endOfPaginationReached = nextPage == null)

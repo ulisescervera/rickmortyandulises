@@ -10,6 +10,7 @@ import com.gmail.uli153.rickmortyandulises.domain.RMURepositoryImpl
 import com.gmail.uli153.rickmortyandulises.domain.usecases.CharacterUseCases
 import com.gmail.uli153.rickmortyandulises.domain.usecases.GetAllCharacters
 import com.gmail.uli153.rickmortyandulises.domain.usecases.GetCharacterById
+import com.gmail.uli153.rickmortyandulises.utils.PreferenceUtils
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,6 +34,12 @@ class AppModule {
 
     @Provides
     @Singleton
+    fun preferenceUtilsProvider(@ApplicationContext context: Context): PreferenceUtils {
+        return PreferenceUtils(context)
+    }
+
+    @Provides
+    @Singleton
     fun apiServiceProvider(): ApiService {
         val apiUrl = "https://rickandmortyapi.com/api/"
         val logger = HttpLoggingInterceptor()
@@ -50,8 +57,8 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun repositoryProvider(database: RMUDatabase, api: ApiService): RMURepository {
-        return RMURepositoryImpl(RMULocalDataSourceImpl(database), RMURemoteDataSourceImp(database, api))
+    fun repositoryProvider(database: RMUDatabase, api: ApiService, preferenceUtils: PreferenceUtils): RMURepository {
+        return RMURepositoryImpl(RMULocalDataSourceImpl(database), RMURemoteDataSourceImp(database, api, preferenceUtils))
     }
 
     @Provides

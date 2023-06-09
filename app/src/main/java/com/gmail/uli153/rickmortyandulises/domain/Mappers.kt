@@ -8,7 +8,7 @@ import com.gmail.uli153.rickmortyandulises.domain.models.CharacterStatus
 import java.util.Date
 
 fun CharacterEntity.toModel(): CharacterModel {
-    val created = Formatters().remoteDateFormatter.parse(this.created) ?: Date()
+    val created = Formatters.remoteDateFormatter.parse(this.created) ?: Date()
     val episodeIds = this.episodes.mapNotNull { Uri.parse(it).pathSegments.last()?.toLongOrNull() }
     return CharacterModel(
         id = this.id,

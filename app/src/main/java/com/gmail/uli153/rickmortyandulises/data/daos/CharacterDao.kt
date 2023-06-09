@@ -15,11 +15,9 @@ interface CharacterDao {
 
     @Query("SELECT * FROM characters WHERE " +
             "name LIKE '%' || :name  || '%' " +
-            "AND (:status IS NULL OR status LIKE :status)")
+            "AND (:status IS NULL OR status LIKE :status) " +
+            "ORDER BY id")
     fun getAllBy(name: String, status: String?): PagingSource<Int, CharacterEntity>
-
-//    @Query("SELECT * FROM characters")
-//    fun getAllBy(): PagingSource<Int, CharacterEntity>
 
     @Query("SELECT * FROM characters WHERE id LIKE :id LIMIT 1")
     fun getById(id: Long): CharacterEntity?
