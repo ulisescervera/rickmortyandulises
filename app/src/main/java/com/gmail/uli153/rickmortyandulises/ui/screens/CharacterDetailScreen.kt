@@ -2,11 +2,14 @@ package com.gmail.uli153.rickmortyandulises.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,6 +26,7 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterStatus
+import com.gmail.uli153.rickmortyandulises.domain.models.EpisodeModel
 import com.gmail.uli153.rickmortyandulises.ui.theme.Dimens
 import com.gmail.uli153.rickmortyandulises.ui.viewmodels.MainViewModel
 import com.gmail.uli153.rickmortyandulises.utils.UIState
@@ -36,12 +40,14 @@ fun CharacterDetailScreen(padding: PaddingValues, mainViewModel: MainViewModel) 
         is UIState.Success -> c.data
     }
 
+    val characterEpisodes = mainViewModel.characterEpisodes.collectAsState()
+
     ConstraintLayout(modifier = Modifier
         .fillMaxSize(1f)
         .padding(padding)
         .background(MaterialTheme.colorScheme.background)
     ) {
-        val (image, name, state) = createRefs()
+        val (image, name, state, episodeList) = createRefs()
         if (character != null) {
             AsyncImage(model = ImageRequest.Builder(LocalContext.current)
                 .data(character.image)
@@ -73,8 +79,26 @@ fun CharacterDetailScreen(padding: PaddingValues, mainViewModel: MainViewModel) 
                 end.linkTo(parent.end, Dimens.vMargin)
                 width = Dimension.fillToConstraints
             })
+
+            LazyRow(modifier = Modifier.constrainAs(episodeList) {
+                start.linkTo(parent.start, Dimens.hMargin)
+                top.linkTo(image.bottom)
+                end.linkTo(parent.end, Dimens.hMargin)
+                height = Dimension.value(60.dp)
+            }) {
+                items(characterEpisodes.value.size) { index ->
+                    EpisodeCell(characterEpisodes.value[index])
+                }
+            }
         } else {
             //todo shimmer
         }
+    }
+}
+
+@Composable
+private fun EpisodeCell(episode: EpisodeModel?) {
+    Box(modifier = Modifier.aspectRatio(1f).height(64.dp)) {
+        Text(text = episode?.name ?: "null")
     }
 }

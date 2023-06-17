@@ -2,9 +2,11 @@ package com.gmail.uli153.rickmortyandulises.domain
 
 import android.net.Uri
 import com.gmail.uli153.rickmortyandulises.data.entities.CharacterEntity
+import com.gmail.uli153.rickmortyandulises.data.entities.EpisodeEntity
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterGender
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterModel
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterStatus
+import com.gmail.uli153.rickmortyandulises.domain.models.EpisodeModel
 import java.util.Date
 
 fun CharacterEntity.toModel(): CharacterModel {
@@ -24,4 +26,9 @@ fun CharacterEntity.toModel(): CharacterModel {
         url = this.url,
         created = created
     )
+}
+
+fun EpisodeEntity.toModel(): EpisodeModel {
+    val characterIds = this.characters.mapNotNull { Uri.parse(it).pathSegments.lastOrNull()?.toLongOrNull() }
+    return EpisodeModel(this.id, this.name, this.date, characterIds)
 }

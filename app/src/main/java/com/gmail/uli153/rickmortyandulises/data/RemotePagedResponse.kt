@@ -1,6 +1,6 @@
 package com.gmail.uli153.rickmortyandulises.data
 
-data class RemoteResponse<T>(
+data class RemotePagedResponse<T>(
     val info: InfoResponse,
     val results: List<T>
 )
