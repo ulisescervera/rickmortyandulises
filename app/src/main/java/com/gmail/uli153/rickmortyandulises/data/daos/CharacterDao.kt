@@ -24,6 +24,9 @@ interface CharacterDao {
     @Query("SELECT * FROM characters WHERE id LIKE :id LIMIT 1")
     fun getById(id: Long): CharacterEntity?
 
+    @Query("SELECT * FROM characters WHERE id IN (:ids)")
+    suspend fun getByIds(ids: List<Long>): List<CharacterEntity>
+
     @Query("DELETE FROM characters")
     suspend fun clearAll()
 

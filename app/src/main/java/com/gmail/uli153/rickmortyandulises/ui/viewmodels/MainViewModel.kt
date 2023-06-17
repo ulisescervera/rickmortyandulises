@@ -6,21 +6,29 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterModel
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterStatus
+import com.gmail.uli153.rickmortyandulises.domain.models.EpisodeModel
 import com.gmail.uli153.rickmortyandulises.domain.usecases.CharacterUseCases
+import com.gmail.uli153.rickmortyandulises.domain.usecases.EpisodeUseCases
 import com.gmail.uli153.rickmortyandulises.utils.UIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val characterUseCases: CharacterUseCases): ViewModel() {
+class MainViewModel @Inject constructor(
+    private val characterUseCases: CharacterUseCases,
+    private val episodeUseCases: EpisodeUseCases
+    ): ViewModel() {
 
     private val _characters: MutableStateFlow<PagingData<CharacterModel>> = MutableStateFlow(PagingData.from(emptyList()))
     val characters: StateFlow<PagingData<CharacterModel>> = _characters
@@ -30,6 +38,9 @@ class MainViewModel @Inject constructor(private val characterUseCases: Character
 
     private val _selectedCharacter: MutableStateFlow<UIState<CharacterModel>> = MutableStateFlow(UIState.Loading)
     val selectedCharacter: StateFlow<UIState<CharacterModel>> = _selectedCharacter
+
+    private val _characterEpisodes: MutableStateFlow<List<EpisodeModel?>> = MutableStateFlow(emptyList())
+    val characterEpisodes: StateFlow<List<EpisodeModel?>> = _characterEpisodes
 
     private var filtersJob: Job? = null
 
@@ -44,6 +55,17 @@ class MainViewModel @Inject constructor(private val characterUseCases: Character
                 filtersJob = viewModelScope.launch(Dispatchers.IO) {
                     characters.collectLatest {
                         _characters.value = it
+                    }
+                }
+            }
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            selectedCharacter.collectLatest {
+                _characterEpisodes.value = emptyList()
+                if (it is UIState.Success) {
+                    episodeUseCases.getEpisodesByIds(it.data.episodes).collectLatest { episodes ->
+                        _characterEpisodes.value = episodes
                     }
                 }
             }

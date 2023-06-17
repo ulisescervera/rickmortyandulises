@@ -1,27 +1,58 @@
 package com.gmail.uli153.rickmortyandulises.data.datasource
 
-import androidx.paging.ExperimentalPagingApi
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import com.gmail.uli153.rickmortyandulises.data.ApiService
-import com.gmail.uli153.rickmortyandulises.data.RMUDatabase
-import com.gmail.uli153.rickmortyandulises.data.RMURemoteMediator
+import com.gmail.uli153.rickmortyandulises.data.services.ApiService
+import com.gmail.uli153.rickmortyandulises.data.services.GraphQLService
 import com.gmail.uli153.rickmortyandulises.data.entities.CharacterEntity
-import kotlinx.coroutines.flow.Flow
+import com.gmail.uli153.rickmortyandulises.data.entities.CharacterIdsResponse
+import com.gmail.uli153.rickmortyandulises.data.entities.EpisodeEntity
+import org.json.JSONObject
+import kotlin.jvm.Throws
 
 class RMURemoteDataSourceImp(
-    private val database: RMUDatabase,
-    private val apiService: ApiService
+    private val apiService: ApiService,
+    private val graphQLService: GraphQLService
 ): RMURemoteDataSource {
 
-    @OptIn(ExperimentalPagingApi::class)
-    override fun getCharacters(name: String, status: String?): Flow<PagingData<CharacterEntity>> {
-        return Pager(
-            config= PagingConfig(pageSize = 20),
-            remoteMediator = RMURemoteMediator(database, apiService, name, status),
-            pagingSourceFactory = { database.characterDao().getAllBy(name, status) }
-        ).flow
+    @Throws
+    override suspend fun getCharacterIds(page: Int, name: String, status: String?): CharacterIdsResponse {
+        val query = """
+                query {
+                    characters(page: $page, filter: { name: "$name" }) {
+                        info {
+                            count
+                            pages
+                            next
+                            prev
+                        }
+                        results {
+                             id
+                        }
+                    }
+                }
+            """.trimIndent()
+        val paramObject = JSONObject()
+        paramObject.put("query", query)
+        val response = graphQLService.getCharacterIds(paramObject.toString())
+        return response.body()?.data?.characters
+            ?: throw Exception("Error fetching character ids")
+
     }
 
+    override suspend fun getCharacters(ids: List<Long>): List<CharacterEntity> {
+        return apiService.getCharacters(ids).body() ?: throw Exception("Error fetching character ids")
+    }
+
+    override suspend fun getEpisodesByIds(ids: List<Long>): List<EpisodeEntity> {
+        //todo handle error
+        return try {
+            val response = apiService.getAllEpisodes(ids)
+            if (response.isSuccessful) {
+                response.body() ?: emptyList()
+            } else {
+                emptyList()
+            }
+        } catch (e: Exception) {
+            return emptyList()
+        }
+    }
 }

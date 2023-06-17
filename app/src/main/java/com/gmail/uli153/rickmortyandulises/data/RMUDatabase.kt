@@ -5,14 +5,13 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.gmail.uli153.rickmortyandulises.data.RMUDatabase.Companion.DATABASE_VERSION
 import com.gmail.uli153.rickmortyandulises.data.daos.CharacterDao
+import com.gmail.uli153.rickmortyandulises.data.daos.EpisodeDao
 import com.gmail.uli153.rickmortyandulises.data.entities.CharacterEntity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
+import com.gmail.uli153.rickmortyandulises.data.entities.EpisodeEntity
 
-@Database(entities = [CharacterEntity::class], version = DATABASE_VERSION)
+@Database(entities = [CharacterEntity::class, EpisodeEntity::class], version = DATABASE_VERSION)
 @TypeConverters(Converters::class)
 abstract class RMUDatabase: RoomDatabase() {
 
@@ -22,24 +21,12 @@ abstract class RMUDatabase: RoomDatabase() {
 
         fun buildDatabase(context: Context): RMUDatabase {
             return Room.databaseBuilder(context, RMUDatabase::class.java, DATABASE_NAME)
-                .addCallback(AkihabaraDatabaseCallack())
                 .fallbackToDestructiveMigration()
                 .build()
         }
     }
 
     abstract fun characterDao(): CharacterDao
-
-}
-
-class AkihabaraDatabaseCallack: RoomDatabase.Callback() {
-
-    private val scope = CoroutineScope(SupervisorJob())
-
-    override fun onCreate(db: SupportSQLiteDatabase) {
-        super.onCreate(db)
-
-    }
-
+    abstract fun episodeDao(): EpisodeDao
 
 }
