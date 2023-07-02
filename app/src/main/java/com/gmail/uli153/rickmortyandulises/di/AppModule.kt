@@ -2,11 +2,11 @@ package com.gmail.uli153.rickmortyandulises.di
 
 import android.content.Context
 import com.gmail.uli153.rickmortyandulises.BuildConfig
-import com.gmail.uli153.rickmortyandulises.data.services.ApiService
-import com.gmail.uli153.rickmortyandulises.data.services.GraphQLService
 import com.gmail.uli153.rickmortyandulises.data.RMUDatabase
 import com.gmail.uli153.rickmortyandulises.data.datasource.RMULocalDataSourceImpl
 import com.gmail.uli153.rickmortyandulises.data.datasource.RMURemoteDataSourceImp
+import com.gmail.uli153.rickmortyandulises.data.services.ApiService
+import com.gmail.uli153.rickmortyandulises.data.services.GraphQLService
 import com.gmail.uli153.rickmortyandulises.domain.RMURepository
 import com.gmail.uli153.rickmortyandulises.domain.RMURepositoryImpl
 import com.gmail.uli153.rickmortyandulises.domain.usecases.CharacterUseCases
@@ -14,6 +14,7 @@ import com.gmail.uli153.rickmortyandulises.domain.usecases.EpisodeUseCases
 import com.gmail.uli153.rickmortyandulises.domain.usecases.GetAllCharacters
 import com.gmail.uli153.rickmortyandulises.domain.usecases.GetCharacterById
 import com.gmail.uli153.rickmortyandulises.domain.usecases.GetEpisodesByIds
+import com.gmail.uli153.rickmortyandulises.domain.usecases.GetPagedCharactersById
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -81,7 +82,8 @@ class AppModule {
     fun characterUseCasesProvider(repository: RMURepository): CharacterUseCases {
         return CharacterUseCases(
             getAllCharacters = GetAllCharacters(repository),
-            getCharacterById = GetCharacterById(repository)
+            getCharacterById = GetCharacterById(repository),
+            getPagedCharactersById = GetPagedCharactersById(repository)
         )
     }
 

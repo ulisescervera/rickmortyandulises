@@ -12,14 +12,17 @@ import com.gmail.uli153.rickmortyandulises.domain.usecases.EpisodeUseCases
 import com.gmail.uli153.rickmortyandulises.utils.UIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -39,8 +42,39 @@ class MainViewModel @Inject constructor(
     private val _selectedCharacter: MutableStateFlow<UIState<CharacterModel>> = MutableStateFlow(UIState.Loading)
     val selectedCharacter: StateFlow<UIState<CharacterModel>> = _selectedCharacter
 
-    private val _characterEpisodes: MutableStateFlow<List<EpisodeModel?>> = MutableStateFlow(emptyList())
-    val characterEpisodes: StateFlow<List<EpisodeModel?>> = _characterEpisodes
+    // when a character is selected (detail character), it triggers character's episodes fetch
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val characterEpisodes: StateFlow<List<EpisodeModel?>> = selectedCharacter.flatMapLatest {
+        val episodes = if (it is UIState.Success) {
+            episodeUseCases.getEpisodesByIds(it.data.episodes)
+        } else {
+            flowOf()
+        }
+        episodes
+    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+    private val relatedcharacterIds: StateFlow<List<Long>> = characterEpisodes.transform { episodes ->
+        val selectedCharacterId = when (val s = selectedCharacter.value) {
+            is UIState.Success -> s.data.id
+            else -> null
+        }
+        val characterOcurrences = mutableMapOf<Long, Int>()
+        episodes.filterNotNull().flatMap { episode -> episode.characters }.forEach { id ->
+            characterOcurrences[id] = (characterOcurrences[id] ?: 0) + 1
+        }
+        val relatedCharacterIds = characterOcurrences.entries
+            .filter { it.key != selectedCharacterId } // removed current selected character from related list
+            .sortedByDescending { it.value } // sorted by ocurrences (more related character)
+            .map { it.key }
+
+        emit(relatedCharacterIds)
+    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+    // when selected character's episodes is loaded, it triggers related characters fetch
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val relatedcharacters: StateFlow<PagingData<CharacterModel>> = relatedcharacterIds.flatMapLatest { relatedCharacterIds ->
+        characterUseCases.getPagedCharactersById(relatedCharacterIds)
+    }.stateIn(viewModelScope, SharingStarted.Lazily, PagingData.from(emptyList()))
 
     private var filtersJob: Job? = null
 
@@ -49,23 +83,13 @@ class MainViewModel @Inject constructor(
             val filters = combine(nameFilter, statusFilter) { name, status ->
                 Filters(name, status)
             }
+            // when filters changes, it triggers a character fetch
             filters.collectLatest {
                 filtersJob?.cancel()
                 val characters = characterUseCases.getAllCharacters(it.name, it.status).cachedIn(viewModelScope)
                 filtersJob = viewModelScope.launch(Dispatchers.IO) {
                     characters.collectLatest {
                         _characters.value = it
-                    }
-                }
-            }
-        }
-
-        viewModelScope.launch(Dispatchers.IO) {
-            selectedCharacter.collectLatest {
-                _characterEpisodes.value = emptyList()
-                if (it is UIState.Success) {
-                    episodeUseCases.getEpisodesByIds(it.data.episodes).collectLatest { episodes ->
-                        _characterEpisodes.value = episodes
                     }
                 }
             }

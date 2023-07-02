@@ -2,15 +2,18 @@ package com.gmail.uli153.rickmortyandulises.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,10 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
-import com.gmail.uli153.rickmortyandulises.domain.models.CharacterStatus
+import com.gmail.uli153.rickmortyandulises.domain.models.CharacterModel
 import com.gmail.uli153.rickmortyandulises.domain.models.EpisodeModel
 import com.gmail.uli153.rickmortyandulises.ui.theme.Dimens
 import com.gmail.uli153.rickmortyandulises.ui.viewmodels.MainViewModel
@@ -41,13 +46,14 @@ fun CharacterDetailScreen(padding: PaddingValues, mainViewModel: MainViewModel) 
     }
 
     val characterEpisodes = mainViewModel.characterEpisodes.collectAsState()
+    val relatedCharacters = mainViewModel.relatedcharacters.collectAsLazyPagingItems()
 
     ConstraintLayout(modifier = Modifier
         .fillMaxSize(1f)
         .padding(padding)
         .background(MaterialTheme.colorScheme.background)
     ) {
-        val (image, name, state, episodeList) = createRefs()
+        val (image, name, state, episodeList, relatedCharacterList) = createRefs()
         if (character != null) {
             AsyncImage(model = ImageRequest.Builder(LocalContext.current)
                 .data(character.image)
@@ -90,6 +96,19 @@ fun CharacterDetailScreen(padding: PaddingValues, mainViewModel: MainViewModel) 
                     EpisodeCell(characterEpisodes.value[index])
                 }
             }
+
+            LazyRow(modifier = Modifier.constrainAs(relatedCharacterList) {
+                start.linkTo(parent.start, Dimens.hMargin)
+                top.linkTo(episodeList.bottom)
+                end.linkTo(parent.end, Dimens.hMargin)
+                height = Dimension.value(60.dp)
+            }) {
+                items(items = relatedCharacters, key = { it.id }) { character ->
+                    if (character != null) {
+                        RelatedCharacterCell(character)
+                    }
+                }
+            }
         } else {
             //todo shimmer
         }
@@ -98,7 +117,33 @@ fun CharacterDetailScreen(padding: PaddingValues, mainViewModel: MainViewModel) 
 
 @Composable
 private fun EpisodeCell(episode: EpisodeModel?) {
-    Box(modifier = Modifier.aspectRatio(1f).height(64.dp)) {
+    Box(modifier = Modifier
+        .aspectRatio(1f)
+        .height(64.dp)) {
         Text(text = episode?.name ?: "null")
+    }
+}
+
+@Composable
+private fun RelatedCharacterCell(character: CharacterModel) {
+    val imageLoader = ImageRequest.Builder(LocalContext.current)
+        .data(character.image)
+        .crossfade(true)
+        .crossfade(250)
+        .diskCachePolicy(CachePolicy.ENABLED)
+        .build()
+
+    ElevatedCard(modifier = Modifier
+        .fillMaxWidth()
+        .fillMaxHeight()
+        .background(MaterialTheme.colorScheme.surface)
+        .clickable(onClick = {  })
+    ) {
+        AsyncImage(model = imageLoader,
+            contentDescription = "${character.name} image",
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f)
+        )
     }
 }

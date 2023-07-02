@@ -11,5 +11,7 @@ interface RMURepository {
     fun getCharacters(name: String, status: CharacterStatus?): Flow<PagingData<CharacterModel>>
     suspend fun getCharacterById(id: Long): CharacterModel?
 
+    fun getPagedCharactersById(ids: List<Long>): Flow<PagingData<CharacterModel>>
+
     fun getEpisodesByIds(ids: List<Long>): Flow<List<EpisodeModel?>>
 }

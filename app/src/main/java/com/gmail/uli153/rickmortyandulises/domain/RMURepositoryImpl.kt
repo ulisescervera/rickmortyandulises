@@ -10,6 +10,7 @@ import com.gmail.uli153.rickmortyandulises.domain.models.CharacterModel
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterStatus
 import com.gmail.uli153.rickmortyandulises.domain.models.EpisodeModel
 import com.gmail.uli153.rickmortyandulises.domain.paging.CharacterPagingData
+import com.gmail.uli153.rickmortyandulises.domain.paging.CharacterPagingDataByIds
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -32,6 +33,13 @@ class RMURepositoryImpl(
         return localDataSource.getCharacter(id)?.toModel()
     }
 
+    override fun getPagedCharactersById(ids: List<Long>): Flow<PagingData<CharacterModel>> {
+        return Pager(
+            config = PagingConfig(pageSize = 20),
+            pagingSourceFactory = { CharacterPagingDataByIds(localDataSource, remoteDataSource, ids) }
+        ).flow.map { pagingData -> pagingData.map { it.toModel() } }
+    }
+
     override fun getEpisodesByIds(ids: List<Long>): Flow<List<EpisodeModel?>> {
         return flow {
             val localEpisodes = localDataSource.getEpisodes(ids).map { it.toModel() }
@@ -48,6 +56,7 @@ class RMURepositoryImpl(
                 localDataSource.insertEpisodes(remoteEpisodes)
                 val allEpisodes = remoteEpisodes.map { it.toModel() }.toMutableList().apply { addAll(localEpisodes) }
                 episodes.clear()
+                // for loop to keep same order
                 for (id in ids) {
                     episodes.add(allEpisodes.find { it.id == id })
                 }

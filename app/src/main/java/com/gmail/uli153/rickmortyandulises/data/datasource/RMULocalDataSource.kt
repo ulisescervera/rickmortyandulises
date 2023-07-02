@@ -2,8 +2,6 @@ package com.gmail.uli153.rickmortyandulises.data.datasource
 
 import com.gmail.uli153.rickmortyandulises.data.entities.CharacterEntity
 import com.gmail.uli153.rickmortyandulises.data.entities.EpisodeEntity
-import com.gmail.uli153.rickmortyandulises.domain.models.EpisodeModel
-import kotlinx.coroutines.flow.Flow
 
 interface RMULocalDataSource {
 

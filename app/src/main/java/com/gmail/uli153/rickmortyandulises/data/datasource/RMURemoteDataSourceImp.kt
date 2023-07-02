@@ -1,12 +1,11 @@
 package com.gmail.uli153.rickmortyandulises.data.datasource
 
-import com.gmail.uli153.rickmortyandulises.data.services.ApiService
-import com.gmail.uli153.rickmortyandulises.data.services.GraphQLService
 import com.gmail.uli153.rickmortyandulises.data.entities.CharacterEntity
 import com.gmail.uli153.rickmortyandulises.data.entities.CharacterIdsResponse
 import com.gmail.uli153.rickmortyandulises.data.entities.EpisodeEntity
+import com.gmail.uli153.rickmortyandulises.data.services.ApiService
+import com.gmail.uli153.rickmortyandulises.data.services.GraphQLService
 import org.json.JSONObject
-import kotlin.jvm.Throws
 
 class RMURemoteDataSourceImp(
     private val apiService: ApiService,
