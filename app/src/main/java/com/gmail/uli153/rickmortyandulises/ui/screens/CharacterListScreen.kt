@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -16,6 +17,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
@@ -28,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.items
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
@@ -39,6 +41,7 @@ import com.gmail.uli153.rickmortyandulises.ui.theme.Dimens
 @Composable
 fun CharacterListScreen(
     padding: PaddingValues,
+    showFilters: State<Boolean>,
     characters: LazyPagingItems<CharacterModel>,
     nameFilter: State<String>,
     statusFilter: State<CharacterStatus?>,
@@ -58,14 +61,17 @@ fun CharacterListScreen(
         .fillMaxSize()
         .background(MaterialTheme.colorScheme.background)
     ) {
-        LazyColumn(
+        LazyVerticalGrid(
             contentPadding = PaddingValues(horizontal = Dimens.hMargin, vertical = topPadding + queryViewHeight),
-            modifier = Modifier.fillMaxSize()
+            columns = GridCells.Adaptive(128.dp),
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(Dimens.rowVSpace),
+            horizontalArrangement = Arrangement.spacedBy(Dimens.rowVSpace),
         ) {
-            items(items = characters, key = { it.id }) { character ->
+            items(characters.itemCount, key = { characters[it]?.id ?: 0 }) {
+                val character = characters[it]
                 if (character != null) {
                     CharacterListItem(character, onCharacterClicked)
-                    Spacer(modifier = Modifier.height(24.dp))
                 }
             }
         }
@@ -73,19 +79,21 @@ fun CharacterListScreen(
 //            Modifier.fillMaxWidth().height(200.dp).padding(start = Dimens.hMargin, top = 0.dp, end = Dimens.hMargin)
 //        )
 
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = Dimens.hMargin, top = topPadding, end = Dimens.hMargin)
-        ) {
-            TextField(
-                value = nameFilter.value,
-                onValueChange = onQueryChanged,
-                placeholder = { Text("Busca por nombre") },
-                interactionSource = interactionSource,
-                singleLine = true,
-                modifier = borderModifier.fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surface, shape)
-            )
+        if (showFilters.value) {
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = Dimens.hMargin, top = topPadding, end = Dimens.hMargin)
+            ) {
+                TextField(
+                    value = nameFilter.value,
+                    onValueChange = onQueryChanged,
+                    placeholder = { Text("Busca por nombre") },
+                    interactionSource = interactionSource,
+                    singleLine = true,
+                    modifier = borderModifier.fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surface, shape)
+                )
+            }
         }
     }
 }

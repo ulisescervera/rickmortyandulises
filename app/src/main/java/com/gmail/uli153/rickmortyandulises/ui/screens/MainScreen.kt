@@ -6,6 +6,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.gmail.uli153.rickmortyandulises.navigation.NavigationGraph
@@ -17,15 +20,18 @@ fun MainScreen(
     mainViewModel: MainViewModel
 ) {
     val navController = rememberNavController()
+    val showFilters: MutableState<Boolean> = remember { mutableStateOf(true) }
 
     Scaffold(
-        topBar = { TopBar(navController) },
+        topBar = {
+            TopBar(navController, toggleFiltersVisibility = { showFilters.value = showFilters.value.not() } )
+        }
     ) { padding ->
         Box(modifier = Modifier
             .fillMaxWidth(1f)
             .background(MaterialTheme.colorScheme.background)
         ) {
-            NavigationGraph(navController, padding, mainViewModel)
+            NavigationGraph(navController, padding, mainViewModel, showFilters)
         }
     }
 }

@@ -30,8 +30,8 @@ import androidx.core.view.WindowCompat
 //)
 
 
-private val LightColorScheme = lightColorScheme(
-    primary = Color(0xFF97ce4c),
+    private val LightColorScheme = lightColorScheme(
+    primary = Color(0xff97ce4c),
     onPrimary = White,
     secondary = Color(0xFFe89ac7),
     onSecondary = White,
@@ -50,7 +50,7 @@ private val DarkColorScheme = LightColorScheme
 fun RMUTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

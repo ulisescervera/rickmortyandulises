@@ -2,6 +2,8 @@ package com.gmail.uli153.rickmortyandulises.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -18,6 +20,7 @@ fun NavigationGraph(
     navController: NavHostController,
     padding: PaddingValues,
     mainViewModel: MainViewModel,
+    showFilters: State<Boolean>
 ) {
     val characters = mainViewModel.characters.collectAsLazyPagingItems()
     val nameFilter = mainViewModel.nameFilter.collectAsState()
@@ -34,7 +37,7 @@ fun NavigationGraph(
     }
     NavHost(navController, startDestination = NavigationItem.Home.route) {
         composable(NavigationItem.Home.route) {
-            CharacterListScreen(padding, characters, nameFilter, statusFilter, onQueryChanged, onStateChanged, onCharacterClicked)
+            CharacterListScreen(padding, showFilters, characters, nameFilter, statusFilter, onQueryChanged, onStateChanged, onCharacterClicked)
         }
 
         composable(NavigationItem.Detail.route) {

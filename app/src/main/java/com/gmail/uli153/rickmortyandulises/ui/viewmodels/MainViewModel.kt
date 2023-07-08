@@ -73,7 +73,7 @@ class MainViewModel @Inject constructor(
     // when selected character's episodes is loaded, it triggers related characters fetch
     @OptIn(ExperimentalCoroutinesApi::class)
     val relatedcharacters: StateFlow<PagingData<CharacterModel>> = relatedcharacterIds.flatMapLatest { relatedCharacterIds ->
-        characterUseCases.getPagedCharactersById(relatedCharacterIds)
+        characterUseCases.getPagedCharactersById(relatedCharacterIds).cachedIn(viewModelScope)
     }.stateIn(viewModelScope, SharingStarted.Lazily, PagingData.from(emptyList()))
 
     private var filtersJob: Job? = null

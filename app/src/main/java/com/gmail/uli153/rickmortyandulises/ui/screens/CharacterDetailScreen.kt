@@ -3,6 +3,7 @@ package com.gmail.uli153.rickmortyandulises.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
@@ -11,10 +12,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -26,7 +30,6 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
@@ -86,24 +89,33 @@ fun CharacterDetailScreen(padding: PaddingValues, mainViewModel: MainViewModel) 
                 width = Dimension.fillToConstraints
             })
 
-            LazyRow(modifier = Modifier.constrainAs(episodeList) {
-                start.linkTo(parent.start, Dimens.hMargin)
-                top.linkTo(image.bottom)
-                end.linkTo(parent.end, Dimens.hMargin)
-                height = Dimension.value(60.dp)
-            }) {
+            LazyRow(horizontalArrangement = Arrangement.spacedBy(Dimens.rowVSpace),
+                modifier = Modifier.constrainAs(episodeList) {
+                    start.linkTo(parent.start, Dimens.hMargin)
+                    top.linkTo(image.bottom)
+                    end.linkTo(parent.end, Dimens.hMargin)
+                    height = Dimension.value(60.dp)
+                    width = Dimension.fillToConstraints
+                }
+            ) {
                 items(characterEpisodes.value.size) { index ->
                     EpisodeCell(characterEpisodes.value[index])
+                    Divider(Modifier.width(Dimens.rowVSpace))
                 }
             }
 
-            LazyRow(modifier = Modifier.constrainAs(relatedCharacterList) {
-                start.linkTo(parent.start, Dimens.hMargin)
-                top.linkTo(episodeList.bottom)
-                end.linkTo(parent.end, Dimens.hMargin)
-                height = Dimension.value(60.dp)
-            }) {
-                items(items = relatedCharacters, key = { it.id }) { character ->
+            LazyRow(
+                modifier = Modifier.constrainAs(relatedCharacterList) {
+                    start.linkTo(parent.start, Dimens.hMargin)
+                    top.linkTo(episodeList.bottom, Dimens.rowVSpace)
+                    end.linkTo(parent.end, Dimens.hMargin)
+                    height = Dimension.value(96.dp)
+                    width = Dimension.fillToConstraints
+                },
+                horizontalArrangement = Arrangement.spacedBy(Dimens.rowVSpace)
+            ) {
+                items(relatedCharacters.itemCount, key = { relatedCharacters[it]?.id ?: 0 }) {
+                    val character = relatedCharacters[it]
                     if (character != null) {
                         RelatedCharacterCell(character)
                     }
@@ -119,7 +131,7 @@ fun CharacterDetailScreen(padding: PaddingValues, mainViewModel: MainViewModel) 
 private fun EpisodeCell(episode: EpisodeModel?) {
     Box(modifier = Modifier
         .aspectRatio(1f)
-        .height(64.dp)) {
+        .height(128.dp)) {
         Text(text = episode?.name ?: "null")
     }
 }
@@ -133,11 +145,12 @@ private fun RelatedCharacterCell(character: CharacterModel) {
         .diskCachePolicy(CachePolicy.ENABLED)
         .build()
 
-    ElevatedCard(modifier = Modifier
-        .fillMaxWidth()
-        .fillMaxHeight()
-        .background(MaterialTheme.colorScheme.surface)
-        .clickable(onClick = {  })
+    ElevatedCard(shape = ShapeDefaults.ExtraSmall,
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .background(MaterialTheme.colorScheme.surface)
+            .clickable(onClick = { })
     ) {
         AsyncImage(model = imageLoader,
             contentDescription = "${character.name} image",
