@@ -15,12 +15,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
@@ -44,16 +47,17 @@ class MainViewModel @Inject constructor(
 
     // when a character is selected (detail character), it triggers character's episodes fetch
     @OptIn(ExperimentalCoroutinesApi::class)
-    val characterEpisodes: StateFlow<List<EpisodeModel?>> = selectedCharacter.flatMapLatest {
+    val characterEpisodes: SharedFlow<List<EpisodeModel?>> = selectedCharacter.flatMapLatest {
         val episodes = if (it is UIState.Success) {
             episodeUseCases.getEpisodesByIds(it.data.episodes)
         } else {
             flowOf()
         }
         episodes
-    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+    }.shareIn(viewModelScope, SharingStarted.Lazily)
 
-    private val relatedcharacterIds: StateFlow<List<Long>> = characterEpisodes.transform { episodes ->
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val relatedcharacterIds: StateFlow<List<Long>> = characterEpisodes.mapLatest { episodes ->
         val selectedCharacterId = when (val s = selectedCharacter.value) {
             is UIState.Success -> s.data.id
             else -> null
@@ -67,7 +71,7 @@ class MainViewModel @Inject constructor(
             .sortedByDescending { it.value } // sorted by ocurrences (more related character)
             .map { it.key }
 
-        emit(relatedCharacterIds)
+        relatedCharacterIds
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     // when selected character's episodes is loaded, it triggers related characters fetch

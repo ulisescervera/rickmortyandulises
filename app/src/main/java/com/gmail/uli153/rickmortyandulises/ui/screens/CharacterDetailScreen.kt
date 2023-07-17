@@ -25,6 +25,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -33,6 +34,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import com.gmail.uli153.rickmortyandulises.R
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterModel
 import com.gmail.uli153.rickmortyandulises.domain.models.EpisodeModel
 import com.gmail.uli153.rickmortyandulises.ui.theme.Dimens
@@ -48,7 +50,7 @@ fun CharacterDetailScreen(padding: PaddingValues, mainViewModel: MainViewModel) 
         is UIState.Success -> c.data
     }
 
-    val characterEpisodes = mainViewModel.characterEpisodes.collectAsState()
+    val characterEpisodes = mainViewModel.characterEpisodes.collectAsState(initial = emptyList())
     val relatedCharacters = mainViewModel.relatedcharacters.collectAsLazyPagingItems()
 
     ConstraintLayout(modifier = Modifier
@@ -56,7 +58,10 @@ fun CharacterDetailScreen(padding: PaddingValues, mainViewModel: MainViewModel) 
         .padding(padding)
         .background(MaterialTheme.colorScheme.background)
     ) {
-        val (image, name, state, episodeList, relatedCharacterList) = createRefs()
+        val (
+            image, name, state, episodeList, relatedCharactersLabel, relatedCharacterList
+        ) = createRefs()
+
         if (character != null) {
             AsyncImage(model = ImageRequest.Builder(LocalContext.current)
                 .data(character.image)
@@ -92,7 +97,7 @@ fun CharacterDetailScreen(padding: PaddingValues, mainViewModel: MainViewModel) 
             LazyRow(horizontalArrangement = Arrangement.spacedBy(Dimens.rowVSpace),
                 modifier = Modifier.constrainAs(episodeList) {
                     start.linkTo(parent.start, Dimens.hMargin)
-                    top.linkTo(image.bottom)
+                    top.linkTo(image.bottom, Dimens.hMargin)
                     end.linkTo(parent.end, Dimens.hMargin)
                     height = Dimension.value(60.dp)
                     width = Dimension.fillToConstraints
@@ -104,10 +109,20 @@ fun CharacterDetailScreen(padding: PaddingValues, mainViewModel: MainViewModel) 
                 }
             }
 
+            Text(
+                text = stringResource(id = R.string.related_characters),
+                modifier = Modifier.constrainAs(relatedCharactersLabel) {
+                    start.linkTo(parent.start, Dimens.hMargin)
+                    top.linkTo(episodeList.bottom, Dimens.vMargin)
+                    end.linkTo(parent.end, Dimens.hMargin)
+                    width = Dimension.fillToConstraints
+                }
+            )
+
             LazyRow(
                 modifier = Modifier.constrainAs(relatedCharacterList) {
                     start.linkTo(parent.start, Dimens.hMargin)
-                    top.linkTo(episodeList.bottom, Dimens.rowVSpace)
+                    top.linkTo(relatedCharactersLabel.bottom, Dimens.rowVSpace)
                     end.linkTo(parent.end, Dimens.hMargin)
                     height = Dimension.value(96.dp)
                     width = Dimension.fillToConstraints
