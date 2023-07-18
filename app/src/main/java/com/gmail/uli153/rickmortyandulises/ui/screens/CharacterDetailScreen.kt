@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
@@ -43,15 +44,19 @@ import com.gmail.uli153.rickmortyandulises.ui.viewmodels.MainViewModel
 import com.gmail.uli153.rickmortyandulises.utils.UIState
 
 @Composable
-fun CharacterDetailScreen(padding: PaddingValues, mainViewModel: MainViewModel, characterEpisodes: List<EpisodeModel?>) {
+fun CharacterDetailScreen(
+    padding: PaddingValues,
+    selectedCharacter: UIState<CharacterModel>,
+    relatedCharacters: LazyPagingItems<CharacterModel>,
+    characterEpisodes: List<EpisodeModel?>,
+    onCharacterSelected: (CharacterModel) -> Unit
+) {
     //todo remove error state, instead use SharedFlow...
-    val character = when(val c = mainViewModel.selectedCharacter.collectAsState().value) {
+    val character = when(val c = selectedCharacter) {
         UIState.Loading -> null
         is UIState.Error -> null
         is UIState.Success -> c.data
     }
-
-    val relatedCharacters = mainViewModel.relatedcharacters.collectAsLazyPagingItems()
 
     ConstraintLayout(modifier = Modifier
         .fillMaxSize(1f)
@@ -132,7 +137,7 @@ fun CharacterDetailScreen(padding: PaddingValues, mainViewModel: MainViewModel, 
                 items(relatedCharacters.itemCount, key = { relatedCharacters[it]?.id ?: 0 }) {
                     val character = relatedCharacters[it]
                     if (character != null) {
-                        RelatedCharacterCell(character)
+                        RelatedCharacterCell(character, onCharacterSelected)
                     }
                 }
             }
@@ -152,7 +157,7 @@ private fun EpisodeCell(episode: EpisodeModel?) {
 }
 
 @Composable
-private fun RelatedCharacterCell(character: CharacterModel) {
+private fun RelatedCharacterCell(character: CharacterModel, onCharacterSelected: (CharacterModel) -> Unit) {
     val imageLoader = ImageRequest.Builder(LocalContext.current)
         .data(character.image)
         .crossfade(true)
@@ -165,7 +170,7 @@ private fun RelatedCharacterCell(character: CharacterModel) {
             .fillMaxWidth()
             .fillMaxHeight()
             .background(MaterialTheme.colorScheme.surface)
-            .clickable(onClick = { })
+            .clickable(onClick = { onCharacterSelected(character) })
     ) {
         AsyncImage(model = imageLoader,
             contentDescription = "${character.name} image",
