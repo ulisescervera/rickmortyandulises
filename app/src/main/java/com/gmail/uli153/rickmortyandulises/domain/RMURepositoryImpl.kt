@@ -1,5 +1,6 @@
 package com.gmail.uli153.rickmortyandulises.domain
 
+import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -60,7 +61,7 @@ class RMURepositoryImpl(
                 for (id in ids) {
                     episodes.add(allEpisodes.find { it.id == id })
                 }
-                emit(allEpisodes)
+                emit(episodes)
             }
         }
     }

@@ -14,7 +14,7 @@ import com.gmail.uli153.rickmortyandulises.domain.usecases.EpisodeUseCases
 import com.gmail.uli153.rickmortyandulises.domain.usecases.GetAllCharacters
 import com.gmail.uli153.rickmortyandulises.domain.usecases.GetCharacterById
 import com.gmail.uli153.rickmortyandulises.domain.usecases.GetEpisodesByIds
-import com.gmail.uli153.rickmortyandulises.domain.usecases.GetPagedCharactersById
+import com.gmail.uli153.rickmortyandulises.domain.usecases.GetRelatedCharacters
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -83,7 +83,7 @@ class AppModule {
         return CharacterUseCases(
             getAllCharacters = GetAllCharacters(repository),
             getCharacterById = GetCharacterById(repository),
-            getPagedCharactersById = GetPagedCharactersById(repository)
+            getRelatedCharacters = GetRelatedCharacters(repository)
         )
     }
 

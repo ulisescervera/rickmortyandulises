@@ -21,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,7 +43,7 @@ import com.gmail.uli153.rickmortyandulises.ui.viewmodels.MainViewModel
 import com.gmail.uli153.rickmortyandulises.utils.UIState
 
 @Composable
-fun CharacterDetailScreen(padding: PaddingValues, mainViewModel: MainViewModel) {
+fun CharacterDetailScreen(padding: PaddingValues, mainViewModel: MainViewModel, characterEpisodes: List<EpisodeModel?>) {
     //todo remove error state, instead use SharedFlow...
     val character = when(val c = mainViewModel.selectedCharacter.collectAsState().value) {
         UIState.Loading -> null
@@ -50,7 +51,6 @@ fun CharacterDetailScreen(padding: PaddingValues, mainViewModel: MainViewModel) 
         is UIState.Success -> c.data
     }
 
-    val characterEpisodes = mainViewModel.characterEpisodes.collectAsState(initial = emptyList())
     val relatedCharacters = mainViewModel.relatedcharacters.collectAsLazyPagingItems()
 
     ConstraintLayout(modifier = Modifier
@@ -103,8 +103,8 @@ fun CharacterDetailScreen(padding: PaddingValues, mainViewModel: MainViewModel) 
                     width = Dimension.fillToConstraints
                 }
             ) {
-                items(characterEpisodes.value.size) { index ->
-                    EpisodeCell(characterEpisodes.value[index])
+                items(characterEpisodes.size) { index ->
+                    EpisodeCell(characterEpisodes[index])
                     Divider(Modifier.width(Dimens.rowVSpace))
                 }
             }

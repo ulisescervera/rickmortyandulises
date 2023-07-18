@@ -25,6 +25,8 @@ fun NavigationGraph(
     val characters = mainViewModel.characters.collectAsLazyPagingItems()
     val nameFilter = mainViewModel.nameFilter.collectAsState()
     val statusFilter = mainViewModel.statusFilter.collectAsState()
+    val characterEpisodes = mainViewModel.characterEpisodes.collectAsState(initial = emptyList())
+
     val onQueryChanged: (String) -> Unit = {
         mainViewModel.nameFilter.value = it
     }
@@ -35,13 +37,14 @@ fun NavigationGraph(
         mainViewModel.selectCharacter(it.id)
         navController.navigate(NavigationItem.Detail.route)
     }
+
     NavHost(navController, startDestination = NavigationItem.Home.route) {
         composable(NavigationItem.Home.route) {
             CharacterListScreen(padding, showFilters, characters, nameFilter, statusFilter, onQueryChanged, onStateChanged, onCharacterClicked)
         }
 
         composable(NavigationItem.Detail.route) {
-            CharacterDetailScreen(padding, mainViewModel)
+            CharacterDetailScreen(padding, mainViewModel, characterEpisodes.value)
         }
     }
 }

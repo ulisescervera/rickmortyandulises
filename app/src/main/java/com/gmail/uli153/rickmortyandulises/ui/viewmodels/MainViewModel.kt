@@ -1,5 +1,6 @@
 package com.gmail.uli153.rickmortyandulises.ui.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -20,6 +21,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMap
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.mapLatest
@@ -54,30 +57,16 @@ class MainViewModel @Inject constructor(
             flowOf()
         }
         episodes
-    }.shareIn(viewModelScope, SharingStarted.Lazily)
+    }.shareIn(viewModelScope, SharingStarted.Eagerly)
 
+    // when selected character's episodes is loaded, it triggers related characters fetch
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val relatedcharacterIds: StateFlow<List<Long>> = characterEpisodes.mapLatest { episodes ->
+    val relatedcharacters: StateFlow<PagingData<CharacterModel>> = characterEpisodes.flatMapLatest { characterEpisodes ->
         val selectedCharacterId = when (val s = selectedCharacter.value) {
             is UIState.Success -> s.data.id
             else -> null
         }
-        val characterOcurrences = mutableMapOf<Long, Int>()
-        episodes.filterNotNull().flatMap { episode -> episode.characters }.forEach { id ->
-            characterOcurrences[id] = (characterOcurrences[id] ?: 0) + 1
-        }
-        val relatedCharacterIds = characterOcurrences.entries
-            .filter { it.key != selectedCharacterId } // removed current selected character from related list
-            .sortedByDescending { it.value } // sorted by ocurrences (more related character)
-            .map { it.key }
-
-        relatedCharacterIds
-    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
-
-    // when selected character's episodes is loaded, it triggers related characters fetch
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val relatedcharacters: StateFlow<PagingData<CharacterModel>> = relatedcharacterIds.flatMapLatest { relatedCharacterIds ->
-        characterUseCases.getPagedCharactersById(relatedCharacterIds).cachedIn(viewModelScope)
+        characterUseCases.getRelatedCharacters(selectedCharacterId, characterEpisodes).cachedIn(viewModelScope)
     }.stateIn(viewModelScope, SharingStarted.Lazily, PagingData.from(emptyList()))
 
     private var filtersJob: Job? = null
