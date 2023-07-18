@@ -21,8 +21,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -39,6 +42,7 @@ import coil.request.ImageRequest
 import com.gmail.uli153.rickmortyandulises.R
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterModel
 import com.gmail.uli153.rickmortyandulises.domain.models.EpisodeModel
+import com.gmail.uli153.rickmortyandulises.ui.dialogs.EpisodeListDialog
 import com.gmail.uli153.rickmortyandulises.ui.theme.Dimens
 import com.gmail.uli153.rickmortyandulises.ui.viewmodels.MainViewModel
 import com.gmail.uli153.rickmortyandulises.utils.UIState
@@ -58,13 +62,17 @@ fun CharacterDetailScreen(
         is UIState.Success -> c.data
     }
 
+    val episodeDialogState = remember {
+        mutableStateOf(false)
+    }
+
     ConstraintLayout(modifier = Modifier
         .fillMaxSize(1f)
         .padding(padding)
         .background(MaterialTheme.colorScheme.background)
     ) {
         val (
-            image, name, state, episodeList, relatedCharactersLabel, relatedCharacterList
+            image, name, state, episodeCountLabel, relatedCharactersLabel, relatedCharacterList
         ) = createRefs()
 
         if (character != null) {
@@ -99,26 +107,23 @@ fun CharacterDetailScreen(
                 width = Dimension.fillToConstraints
             })
 
-            LazyRow(horizontalArrangement = Arrangement.spacedBy(Dimens.rowVSpace),
-                modifier = Modifier.constrainAs(episodeList) {
-                    start.linkTo(parent.start, Dimens.hMargin)
-                    top.linkTo(image.bottom, Dimens.hMargin)
-                    end.linkTo(parent.end, Dimens.hMargin)
-                    height = Dimension.value(60.dp)
-                    width = Dimension.fillToConstraints
-                }
-            ) {
-                items(characterEpisodes.size) { index ->
-                    EpisodeCell(characterEpisodes[index])
-                    Divider(Modifier.width(Dimens.rowVSpace))
-                }
-            }
+            Text(text = stringResource(id = R.string.episode_count, characterEpisodes.size),
+                modifier = Modifier
+                    .constrainAs(episodeCountLabel) {
+                        start.linkTo(parent.start, Dimens.hMargin)
+                        top.linkTo(image.bottom, Dimens.hMargin)
+                        end.linkTo(parent.end, Dimens.hMargin)
+                        height = Dimension.value(60.dp)
+                        width = Dimension.fillToConstraints
+                    }
+                    .clickable { episodeDialogState.value = episodeDialogState.value.not() }
+            )
 
             Text(
                 text = stringResource(id = R.string.related_characters),
                 modifier = Modifier.constrainAs(relatedCharactersLabel) {
                     start.linkTo(parent.start, Dimens.hMargin)
-                    top.linkTo(episodeList.bottom, Dimens.vMargin)
+                    top.linkTo(episodeCountLabel.bottom, Dimens.vMargin)
                     end.linkTo(parent.end, Dimens.hMargin)
                     width = Dimension.fillToConstraints
                 }
@@ -139,6 +144,12 @@ fun CharacterDetailScreen(
                     if (character != null) {
                         RelatedCharacterCell(character, onCharacterSelected)
                     }
+                }
+            }
+
+            if (episodeDialogState.value) {
+                EpisodeListDialog(characterEpisodes) {
+                    episodeDialogState.value = false
                 }
             }
         } else {
