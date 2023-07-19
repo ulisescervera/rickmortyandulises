@@ -13,6 +13,8 @@ import com.gmail.uli153.rickmortyandulises.domain.models.CharacterModel
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterStatus
 import com.gmail.uli153.rickmortyandulises.ui.screens.CharacterDetailScreen
 import com.gmail.uli153.rickmortyandulises.ui.screens.CharacterListScreen
+import com.gmail.uli153.rickmortyandulises.ui.screens.EpisodeListScreen
+import com.gmail.uli153.rickmortyandulises.ui.screens.LocationListScreen
 import com.gmail.uli153.rickmortyandulises.ui.viewmodels.MainViewModel
 
 @Composable
@@ -46,6 +48,14 @@ fun NavigationGraph(
     NavHost(navController, startDestination = NavigationItem.Home.route) {
         composable(NavigationItem.Home.route) {
             CharacterListScreen(padding, showFilters, characters, nameFilter, statusFilter, onQueryChanged, onStateChanged, onCharacterClicked)
+        }
+
+        composable(NavigationItem.Episodes.route) {
+            EpisodeListScreen()
+        }
+
+        composable(NavigationItem.Locations.route) {
+            LocationListScreen()
         }
 
         composable(NavigationItem.Detail.route) {
