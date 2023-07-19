@@ -5,52 +5,28 @@ import androidx.paging.PagingState
 import com.gmail.uli153.rickmortyandulises.data.datasource.RMULocalDataSource
 import com.gmail.uli153.rickmortyandulises.data.datasource.RMURemoteDataSource
 import com.gmail.uli153.rickmortyandulises.data.entities.CharacterEntity
+import com.gmail.uli153.rickmortyandulises.data.entities.ResourceIdsResponse
 
 class CharacterPagingData(
-    private val localDataSource: RMULocalDataSource,
-    private val remoteDataSource: RMURemoteDataSource,
+    localDataSource: RMULocalDataSource,
+    remoteDataSource: RMURemoteDataSource,
     private val characterName: String,
     private val status: String?
-): PagingSource<Int, CharacterEntity>() {
+): ResourcePagingData<CharacterEntity>(localDataSource, remoteDataSource) {
 
-    override fun getRefreshKey(state: PagingState<Int, CharacterEntity>): Int? {
-        return null
+    override suspend fun getRemoteIdsPageData(page: Int): ResourceIdsResponse {
+        return remoteDataSource.getCharacterIds(page, characterName, status)
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CharacterEntity> {
-        val page = params.key ?: 1
+    override suspend fun getLocalResource(ids: List<Long>): List<CharacterEntity> {
+        return localDataSource.getCharacters(ids)
+    }
 
-        try {
-            // Ask the remote server what characters match the search
-            val searchIdResponse = remoteDataSource.getCharacterIds(page, characterName, status)
-            val searchPageIds = searchIdResponse.results.mapNotNull { it.id.toLongOrNull() }
-            val prevPage = searchIdResponse.info.prev
-            val nextPage = searchIdResponse.info.next
-            // Find those characters in cache
-            val charactersInCache = localDataSource.getCharacters(searchPageIds)
-            val allCharacters = ArrayList(charactersInCache)
-            val charactersInCacheIds = charactersInCache.map { it.id }
-            val charactersToRequestRemoteIds = searchPageIds.toMutableList().apply { removeAll(charactersInCacheIds) }
-            if (charactersToRequestRemoteIds.size > 0) {
-                // Fetch from remote server the characters not found in cache
-                val remoteCharacters = remoteDataSource.getCharacters(charactersToRequestRemoteIds)
-                localDataSource.insertCharacters(remoteCharacters)
-                allCharacters.addAll(remoteCharacters)
-            }
+    override suspend fun getRemoteResource(ids: List<Long>): List<CharacterEntity> {
+        return remoteDataSource.getCharacters(ids)
+    }
 
-            if (searchPageIds.size != allCharacters.size) {
-                return LoadResult.Error(Exception("Error fetching character ids"))
-            }
-
-            // This for loop ensures characters are sorted as the remote server sent
-            val characters = mutableListOf<CharacterEntity>()
-            for (id in searchPageIds) {
-                characters.add(allCharacters.first { it.id == id })
-            }
-
-            return LoadResult.Page(data = characters, prevKey = prevPage, nextKey = nextPage)
-        } catch (e: Exception) {
-            return LoadResult.Error(e)
-        }
+    override suspend fun saveRemoteResource(resources: List<CharacterEntity>) {
+        localDataSource.insertCharacters(resources)
     }
 }

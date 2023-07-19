@@ -5,19 +5,19 @@ data class CharacterIdsRemoteResponse(
 )
 
 data class CharacterIdsDataResponse(
-    val characters: CharacterIdsResponse
+    val characters: ResourceIdsResponse
 )
 
-data class CharacterIdsResponse(
-    val info: CharacterIdsInfoRemoteResponse,
-    val results: List<CharacterIdResponse>
+data class ResourceIdsResponse(
+    val info: ResourceIdsInfoRemoteResponse,
+    val results: List<ResourceIdResponse>
 )
 
-data class CharacterIdResponse(
+data class ResourceIdResponse(
     val id: String
 )
 
-data class CharacterIdsInfoRemoteResponse(
+data class ResourceIdsInfoRemoteResponse(
     val prev: Int?,
     val next: Int?
 )

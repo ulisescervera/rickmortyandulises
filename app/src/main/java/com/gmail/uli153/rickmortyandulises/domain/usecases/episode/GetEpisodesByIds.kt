@@ -1,4 +1,4 @@
-package com.gmail.uli153.rickmortyandulises.domain.usecases
+package com.gmail.uli153.rickmortyandulises.domain.usecases.episode
 
 import com.gmail.uli153.rickmortyandulises.domain.RMURepository
 import com.gmail.uli153.rickmortyandulises.domain.models.EpisodeModel

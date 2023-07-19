@@ -12,6 +12,7 @@ import com.gmail.uli153.rickmortyandulises.domain.models.CharacterStatus
 import com.gmail.uli153.rickmortyandulises.domain.models.EpisodeModel
 import com.gmail.uli153.rickmortyandulises.domain.paging.CharacterPagingData
 import com.gmail.uli153.rickmortyandulises.domain.paging.CharacterPagingDataByIds
+import com.gmail.uli153.rickmortyandulises.domain.paging.EpisodePagingData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -21,7 +22,7 @@ class RMURepositoryImpl(
     private val remoteDataSource: RMURemoteDataSource
 ): RMURepository {
 
-    override fun getCharacters(name: String, status: CharacterStatus?): Flow<PagingData<CharacterModel>> {
+    override fun getAllCharacters(name: String, status: CharacterStatus?): Flow<PagingData<CharacterModel>> {
         val safeName = name.trim()
         val stat = status?.name?.lowercase()
         return Pager(
@@ -38,6 +39,13 @@ class RMURepositoryImpl(
         return Pager(
             config = PagingConfig(pageSize = 20),
             pagingSourceFactory = { CharacterPagingDataByIds(localDataSource, remoteDataSource, ids) }
+        ).flow.map { pagingData -> pagingData.map { it.toModel() } }
+    }
+
+    override fun getAllEpisodes(): Flow<PagingData<EpisodeModel>> {
+        return Pager(
+            config = PagingConfig(pageSize = 20),
+            pagingSourceFactory = { EpisodePagingData(localDataSource, remoteDataSource) }
         ).flow.map { pagingData -> pagingData.map { it.toModel() } }
     }
 

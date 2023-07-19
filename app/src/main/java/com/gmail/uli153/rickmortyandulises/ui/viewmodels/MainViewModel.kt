@@ -69,6 +69,9 @@ class MainViewModel @Inject constructor(
         characterUseCases.getRelatedCharacters(selectedCharacterId, characterEpisodes).cachedIn(viewModelScope)
     }.stateIn(viewModelScope, SharingStarted.Lazily, PagingData.from(emptyList()))
 
+    val episodes: StateFlow<PagingData<EpisodeModel>> = episodeUseCases.getAllEpisodes()
+        .stateIn(viewModelScope, SharingStarted.Eagerly, PagingData.from(emptyList()))
+
     private var filtersJob: Job? = null
 
     init {

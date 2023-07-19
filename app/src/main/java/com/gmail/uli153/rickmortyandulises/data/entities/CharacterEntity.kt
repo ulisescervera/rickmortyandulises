@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "characters")
 data class CharacterEntity(
-    @PrimaryKey(autoGenerate = false) val id: Long,
+    @PrimaryKey(autoGenerate = false) override val id: Long,
     val name: String,
     val status: String,
     val species: String,
@@ -20,7 +20,7 @@ data class CharacterEntity(
     val created: String,
     val prevPage: Int? = null,
     val nextPage: Int? = null
-)
+): BaseEntity
 
 data class CharacterOrigin(
     val name: String,

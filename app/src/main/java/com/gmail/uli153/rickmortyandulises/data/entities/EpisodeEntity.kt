@@ -6,8 +6,8 @@ import com.google.gson.annotations.SerializedName
 
 @Entity("episodes")
 data class EpisodeEntity(
-    @PrimaryKey val id: Long,
+    @PrimaryKey override val id: Long,
     val name: String,
     @SerializedName("air_date") val date: String,
     val characters: List<String>
-)
+): BaseEntity

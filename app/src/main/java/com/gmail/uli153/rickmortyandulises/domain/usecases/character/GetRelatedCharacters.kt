@@ -1,10 +1,9 @@
-package com.gmail.uli153.rickmortyandulises.domain.usecases
+package com.gmail.uli153.rickmortyandulises.domain.usecases.character
 
 import androidx.paging.PagingData
 import com.gmail.uli153.rickmortyandulises.domain.RMURepository
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterModel
 import com.gmail.uli153.rickmortyandulises.domain.models.EpisodeModel
-import com.gmail.uli153.rickmortyandulises.utils.UIState
 import kotlinx.coroutines.flow.Flow
 
 class GetRelatedCharacters(private val repository: RMURepository) {

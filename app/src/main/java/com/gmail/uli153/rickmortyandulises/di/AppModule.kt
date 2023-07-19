@@ -11,10 +11,11 @@ import com.gmail.uli153.rickmortyandulises.domain.RMURepository
 import com.gmail.uli153.rickmortyandulises.domain.RMURepositoryImpl
 import com.gmail.uli153.rickmortyandulises.domain.usecases.CharacterUseCases
 import com.gmail.uli153.rickmortyandulises.domain.usecases.EpisodeUseCases
-import com.gmail.uli153.rickmortyandulises.domain.usecases.GetAllCharacters
-import com.gmail.uli153.rickmortyandulises.domain.usecases.GetCharacterById
-import com.gmail.uli153.rickmortyandulises.domain.usecases.GetEpisodesByIds
-import com.gmail.uli153.rickmortyandulises.domain.usecases.GetRelatedCharacters
+import com.gmail.uli153.rickmortyandulises.domain.usecases.character.GetAllCharacters
+import com.gmail.uli153.rickmortyandulises.domain.usecases.character.GetCharacterById
+import com.gmail.uli153.rickmortyandulises.domain.usecases.episode.GetEpisodesByIds
+import com.gmail.uli153.rickmortyandulises.domain.usecases.character.GetRelatedCharacters
+import com.gmail.uli153.rickmortyandulises.domain.usecases.episode.GetAllEpisodes
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -91,7 +92,8 @@ class AppModule {
     @Singleton
     fun episodeUseCasesProvider(repository: RMURepository): EpisodeUseCases {
         return EpisodeUseCases(
-            GetEpisodesByIds(repository)
+            getAllEpisodes = GetAllEpisodes(repository),
+            getEpisodesByIds = GetEpisodesByIds(repository)
         )
     }
 }
