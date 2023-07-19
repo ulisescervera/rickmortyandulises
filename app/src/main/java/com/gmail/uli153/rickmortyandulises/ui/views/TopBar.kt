@@ -56,8 +56,10 @@ fun TopBar(
     val title = items.find { it.route == navBackStackEntry?.destination?.route }?.title?.let { stringResource(id = it) } ?: ""
     val isHomeRoute = navBackStackEntry?.destination?.route == NavigationItem.Home.route
 
-    val iconWidth = 32.dp
+    val backIconWidth = 32.dp
+    val iconWidth = 24.dp
     val iconMargin = 8.dp
+    val iconPadding = 4.dp
 
     Box(modifier = Modifier
         .fillMaxWidth()
@@ -71,7 +73,7 @@ fun TopBar(
             navigationIcon = {
                 Box(modifier = Modifier
                     .fillMaxHeight()
-                    .width(iconWidth)
+                    .width(backIconWidth)
                     .clickable { navController.popBackStack() }) {
                     if (!isHomeRoute) {
                         Image(
@@ -79,7 +81,6 @@ fun TopBar(
                             contentDescription = "navigate back",
                             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary),
                             modifier = Modifier
-                                .width(iconWidth)
                                 .fillMaxHeight()
                                 .padding(iconMargin / 2)
                         )
@@ -107,14 +108,14 @@ fun TopBar(
                     AnimatedVisibility(
                         visible = isHomeRoute,
                         modifier = Modifier
-                            .padding(iconMargin / 2)
+                            .padding(iconPadding)
                             .clickable(onClick = toggleFiltersVisibility)
                             .constrainAs(filterIcon) {
                                 top.linkTo(parent.top)
                                 end.linkTo(parent.end)
                                 bottom.linkTo(parent.bottom)
                                 height = Dimension.fillToConstraints
-                                width = Dimension.value(iconWidth + iconMargin)
+                                width = Dimension.value(iconWidth + iconMargin + iconPadding)
                             }
                     ) {
                         Icon(painter = rememberAsyncImagePainter(R.drawable.ic_filters),

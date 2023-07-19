@@ -4,4 +4,5 @@
     <string name="title_character_detail">Character info</string>
     <string name="related_characters">Related characters</string>
     <string name="episode_count">Episodes: %d</string>
+    <string name="episodes">Episodes</string>
 </resources>

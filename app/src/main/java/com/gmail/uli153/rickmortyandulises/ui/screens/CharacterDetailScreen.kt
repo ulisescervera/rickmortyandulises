@@ -94,13 +94,15 @@ fun CharacterDetailScreen(
                     }
             )
 
-            Text(text = character.name, fontSize = 22.sp, modifier = Modifier.constrainAs(name) {
+            Text(text = character.name, fontSize = 22.sp,
+                modifier = Modifier.constrainAs(name) {
                 start.linkTo(image.end, 12.dp)
                 top.linkTo(image.top)
                 end.linkTo(parent.end, Dimens.vMargin)
                 width = Dimension.fillToConstraints
             })
-            Text(text = "State: ${character.status.name}", modifier = Modifier.constrainAs(state) {
+            Text(text = "State: ${character.status.name}",
+                modifier = Modifier.constrainAs(state) {
                 start.linkTo(image.end, 12.dp)
                 top.linkTo(name.bottom, 12.dp)
                 end.linkTo(parent.end, Dimens.vMargin)
@@ -119,12 +121,12 @@ fun CharacterDetailScreen(
                     .clickable { episodeDialogState.value = episodeDialogState.value.not() }
             )
 
-            Text(
-                text = stringResource(id = R.string.related_characters),
-                modifier = Modifier.constrainAs(relatedCharactersLabel) {
+            Text(text = stringResource(id = R.string.related_characters),
+                modifier = Modifier.constrainAs(episodeCountLabel) {
                     start.linkTo(parent.start, Dimens.hMargin)
-                    top.linkTo(episodeCountLabel.bottom, Dimens.vMargin)
+                    top.linkTo(image.bottom, Dimens.hMargin)
                     end.linkTo(parent.end, Dimens.hMargin)
+                    height = Dimension.value(60.dp)
                     width = Dimension.fillToConstraints
                 }
             )
@@ -148,7 +150,12 @@ fun CharacterDetailScreen(
             }
 
             if (episodeDialogState.value) {
-                EpisodeListDialog(characterEpisodes) {
+                EpisodeListDialog(
+                    characterEpisodes,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(0.9f)
+                ) {
                     episodeDialogState.value = false
                 }
             }
