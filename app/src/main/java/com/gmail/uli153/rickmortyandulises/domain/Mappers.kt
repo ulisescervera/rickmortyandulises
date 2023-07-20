@@ -13,7 +13,6 @@ import java.util.Date
 
 fun CharacterEntity.toModel(): CharacterModel {
     val created = Formatters.remoteDateFormatter.parse(this.created) ?: Date()
-    val episodeIds = this.episodes.mapNotNull { Uri.parse(it).pathSegments.last()?.toLongOrNull() }
     return CharacterModel(
         id = this.id,
         name = this.name,
@@ -24,24 +23,22 @@ fun CharacterEntity.toModel(): CharacterModel {
         origin = this.origin.name,
         location = this.location.name,
         image = this.image,
-        episodes = episodeIds,
+        episodes = this.episodes,
         url = this.url,
         created = created
     )
 }
 
 fun EpisodeEntity.toModel(): EpisodeModel {
-    val characterIds = this.characters.mapNotNull { Uri.parse(it).pathSegments.lastOrNull()?.toLongOrNull() }
-    return EpisodeModel(this.id, this.name, this.date, characterIds)
+    return EpisodeModel(this.id, this.name, this.date, this.characters)
 }
 
 fun LocationEntity.toModel(): LocationModel {
-    val residentIds = this.residents.mapNotNull { it.split("/").lastOrNull()?.toLongOrNull() }
     return LocationModel(
         id = this.id,
         name = this.name,
         type = this.type,
         dimension = this.dimension,
-        residents = residentIds
+        residents = this.residents
     )
 }

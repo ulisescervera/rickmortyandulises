@@ -5,6 +5,7 @@ import androidx.paging.PagingState
 import com.gmail.uli153.rickmortyandulises.data.datasource.RMULocalDataSource
 import com.gmail.uli153.rickmortyandulises.data.datasource.RMURemoteDataSource
 import com.gmail.uli153.rickmortyandulises.data.entities.CharacterEntity
+import com.gmail.uli153.rickmortyandulises.data.toEntity
 
 class CharacterPagingDataByIds(
     private val localDataSource: RMULocalDataSource,
@@ -34,7 +35,7 @@ class CharacterPagingDataByIds(
             val charactersToRequestRemoteIds = pageIds.toMutableList().apply { removeAll(charactersInCacheIds) }
             if (charactersToRequestRemoteIds.size > 0) {
                 // Fetch from remote server the characters not found in cache
-                val remoteCharacters = remoteDataSource.getCharacters(charactersToRequestRemoteIds)
+                val remoteCharacters = remoteDataSource.getCharacters(charactersToRequestRemoteIds).map { it.toEntity() }
                 localDataSource.insertCharacters(remoteCharacters)
                 allCharacters.addAll(remoteCharacters)
             }

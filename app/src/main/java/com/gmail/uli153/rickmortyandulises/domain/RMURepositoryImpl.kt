@@ -7,6 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.gmail.uli153.rickmortyandulises.data.datasource.RMULocalDataSource
 import com.gmail.uli153.rickmortyandulises.data.datasource.RMURemoteDataSource
+import com.gmail.uli153.rickmortyandulises.data.toEntity
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterModel
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterStatus
 import com.gmail.uli153.rickmortyandulises.domain.models.EpisodeModel
@@ -63,7 +64,7 @@ class RMURepositoryImpl(
             val foundEpisodesInCache = episodes.mapNotNull { it?.id }
             val episodesToRequestRemote = ids.toMutableList().apply { removeAll(foundEpisodesInCache) }
             if (episodesToRequestRemote.isNotEmpty()) {
-                val remoteEpisodes = remoteDataSource.getEpisodesByIds(episodesToRequestRemote)
+                val remoteEpisodes = remoteDataSource.getEpisodesByIds(episodesToRequestRemote).map { it.toEntity() }
                 localDataSource.insertEpisodes(remoteEpisodes)
                 val allEpisodes = remoteEpisodes.map { it.toModel() }.toMutableList().apply { addAll(localEpisodes) }
                 episodes.clear()

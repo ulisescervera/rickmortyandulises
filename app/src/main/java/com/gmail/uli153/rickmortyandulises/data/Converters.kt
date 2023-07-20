@@ -41,5 +41,15 @@ class Converters {
         return gson.fromJson(json, type)
     }
 
+    @TypeConverter
+    fun longListToString(list: List<Long>): String {
+        return gson.toJson(list)
+    }
+
+    @TypeConverter
+    fun stringToLongList(json: String): List<Long> {
+        val type = object: TypeToken<List<Long>>() {}.type
+        return gson.fromJson(json, type)
+    }
 
 }

@@ -8,6 +8,6 @@ import com.google.gson.annotations.SerializedName
 data class EpisodeEntity(
     @PrimaryKey override val id: Long,
     val name: String,
-    @SerializedName("air_date") val date: String,
-    val characters: List<String>
+    val date: String,
+    val characters: List<Long>
 ): BaseEntity

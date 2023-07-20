@@ -8,6 +8,7 @@ import com.gmail.uli153.rickmortyandulises.data.datasource.RMURemoteDataSource
 import com.gmail.uli153.rickmortyandulises.data.entities.EpisodeEntity
 import com.gmail.uli153.rickmortyandulises.data.entities.LocationEntity
 import com.gmail.uli153.rickmortyandulises.data.entities.ResourceIdsResponse
+import com.gmail.uli153.rickmortyandulises.data.toEntity
 
 class LocationPagingData(
     localDataSource: RMULocalDataSource,
@@ -23,7 +24,7 @@ class LocationPagingData(
     }
 
     override suspend fun getRemoteResource(ids: List<Long>): List<LocationEntity> {
-        return remoteDataSource.getLocations(ids)
+        return remoteDataSource.getLocations(ids).map { it.toEntity() }
     }
 
     override suspend fun saveRemoteResource(resources: List<LocationEntity>) {

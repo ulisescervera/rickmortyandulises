@@ -6,6 +6,7 @@ import com.gmail.uli153.rickmortyandulises.data.datasource.RMULocalDataSource
 import com.gmail.uli153.rickmortyandulises.data.datasource.RMURemoteDataSource
 import com.gmail.uli153.rickmortyandulises.data.entities.CharacterEntity
 import com.gmail.uli153.rickmortyandulises.data.entities.ResourceIdsResponse
+import com.gmail.uli153.rickmortyandulises.data.toEntity
 
 class CharacterPagingData(
     localDataSource: RMULocalDataSource,
@@ -23,7 +24,7 @@ class CharacterPagingData(
     }
 
     override suspend fun getRemoteResource(ids: List<Long>): List<CharacterEntity> {
-        return remoteDataSource.getCharacters(ids)
+        return remoteDataSource.getCharacters(ids).map { it.toEntity() }
     }
 
     override suspend fun saveRemoteResource(resources: List<CharacterEntity>) {

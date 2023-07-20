@@ -1,5 +1,8 @@
 package com.gmail.uli153.rickmortyandulises.data.datasource
 
+import com.gmail.uli153.rickmortyandulises.data.dto.CharacterDTO
+import com.gmail.uli153.rickmortyandulises.data.dto.EpisodeDTO
+import com.gmail.uli153.rickmortyandulises.data.dto.LocationDTO
 import com.gmail.uli153.rickmortyandulises.data.entities.CharacterEntity
 import com.gmail.uli153.rickmortyandulises.data.entities.ResourceIdsResponse
 import com.gmail.uli153.rickmortyandulises.data.entities.EpisodeEntity
@@ -39,7 +42,7 @@ class RMURemoteDataSourceImp(
 
     }
 
-    override suspend fun getCharacters(ids: List<Long>): List<CharacterEntity> {
+    override suspend fun getCharacters(ids: List<Long>): List<CharacterDTO> {
         return apiService.getCharacters(ids).body() ?: throw Exception("Error fetching character ids")
     }
 
@@ -66,11 +69,11 @@ class RMURemoteDataSourceImp(
             ?: throw Exception("Error fetching episode ids")
     }
 
-    override suspend fun getEpisodes(ids: List<Long>): List<EpisodeEntity> {
+    override suspend fun getEpisodes(ids: List<Long>): List<EpisodeDTO> {
         return apiService.getAllEpisodes(ids).body() ?: throw Exception("Error fetching episodes ids")
     }
 
-    override suspend fun getEpisodesByIds(ids: List<Long>): List<EpisodeEntity> {
+    override suspend fun getEpisodesByIds(ids: List<Long>): List<EpisodeDTO> {
         //todo handle error
         return try {
             val response = apiService.getAllEpisodes(ids)
@@ -107,7 +110,7 @@ class RMURemoteDataSourceImp(
             ?: throw Exception("Error fetching location ids")
     }
 
-    override suspend fun getLocations(ids: List<Long>): List<LocationEntity> {
+    override suspend fun getLocations(ids: List<Long>): List<LocationDTO> {
         return apiService.getAllLocations(ids).body() ?: throw Exception("Error fetching location ids")
     }
 }

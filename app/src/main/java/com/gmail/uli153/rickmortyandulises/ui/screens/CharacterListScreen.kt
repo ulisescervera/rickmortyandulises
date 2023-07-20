@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
@@ -90,7 +92,8 @@ fun CharacterListScreen(
                     placeholder = { Text("Busca por nombre") },
                     interactionSource = interactionSource,
                     singleLine = true,
-                    modifier = borderModifier.fillMaxWidth()
+                    modifier = borderModifier
+                        .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.surface, shape)
                 )
             }
@@ -109,8 +112,8 @@ private fun CharacterListItem(character: CharacterModel, onCharacterClicked: (Ch
     ElevatedCard(modifier = Modifier
         .fillMaxWidth()
         .fillMaxHeight(0.8f)
-        .background(MaterialTheme.colorScheme.surface)
-        .clickable(onClick = { onCharacterClicked(character) })
+        .clickable(onClick = { onCharacterClicked(character) }),
+    colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Row(modifier = Modifier
             .fillMaxSize()

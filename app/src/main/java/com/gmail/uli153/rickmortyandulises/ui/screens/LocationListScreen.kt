@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -49,7 +50,9 @@ fun LocationListScreen(
                 if (location != null) {
                     ElevatedCard(modifier = Modifier
                         .fillMaxWidth()
-                        .height(80.dp)) {
+                        .height(80.dp),
+                        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
+                    ) {
                         Text(text = location.name, modifier = Modifier.fillMaxWidth())
                     }
                 } else {
