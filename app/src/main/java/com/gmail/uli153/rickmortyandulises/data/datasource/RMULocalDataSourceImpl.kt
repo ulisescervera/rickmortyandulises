@@ -3,6 +3,7 @@ package com.gmail.uli153.rickmortyandulises.data.datasource
 import com.gmail.uli153.rickmortyandulises.data.RMUDatabase
 import com.gmail.uli153.rickmortyandulises.data.entities.CharacterEntity
 import com.gmail.uli153.rickmortyandulises.data.entities.EpisodeEntity
+import com.gmail.uli153.rickmortyandulises.data.entities.LocationEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -28,5 +29,15 @@ class RMULocalDataSourceImpl(private val database: RMUDatabase): RMULocalDataSou
 
     override suspend fun insertEpisodes(episodes: List<EpisodeEntity>) {
         database.episodeDao().insertAll(episodes)
+    }
+
+    override suspend fun getLocations(ids: List<Long>): List<LocationEntity> {
+        return withContext(Dispatchers.IO) {
+            database.locationDao().getAllByIds(ids)
+        }
+    }
+
+    override suspend fun insertLocations(locations: List<LocationEntity>) {
+        database.locationDao().insertAll(locations)
     }
 }

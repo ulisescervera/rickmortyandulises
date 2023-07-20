@@ -10,9 +10,11 @@ import com.gmail.uli153.rickmortyandulises.data.datasource.RMURemoteDataSource
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterModel
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterStatus
 import com.gmail.uli153.rickmortyandulises.domain.models.EpisodeModel
+import com.gmail.uli153.rickmortyandulises.domain.models.LocationModel
 import com.gmail.uli153.rickmortyandulises.domain.paging.CharacterPagingData
 import com.gmail.uli153.rickmortyandulises.domain.paging.CharacterPagingDataByIds
 import com.gmail.uli153.rickmortyandulises.domain.paging.EpisodePagingData
+import com.gmail.uli153.rickmortyandulises.domain.paging.LocationPagingData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -72,5 +74,12 @@ class RMURepositoryImpl(
                 emit(episodes)
             }
         }
+    }
+
+    override fun getAllLocations(): Flow<PagingData<LocationModel>> {
+        return Pager(
+            config = PagingConfig(pageSize = 20),
+            pagingSourceFactory = { LocationPagingData(localDataSource, remoteDataSource) }
+        ).flow.map { pagingData -> pagingData.map { it.toModel() } }
     }
 }

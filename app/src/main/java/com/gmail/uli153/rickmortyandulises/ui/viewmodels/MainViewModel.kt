@@ -8,8 +8,10 @@ import androidx.paging.cachedIn
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterModel
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterStatus
 import com.gmail.uli153.rickmortyandulises.domain.models.EpisodeModel
+import com.gmail.uli153.rickmortyandulises.domain.models.LocationModel
 import com.gmail.uli153.rickmortyandulises.domain.usecases.CharacterUseCases
 import com.gmail.uli153.rickmortyandulises.domain.usecases.EpisodeUseCases
+import com.gmail.uli153.rickmortyandulises.domain.usecases.LocationUseCases
 import com.gmail.uli153.rickmortyandulises.utils.UIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -36,8 +38,9 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val characterUseCases: CharacterUseCases,
-    private val episodeUseCases: EpisodeUseCases
-    ): ViewModel() {
+    private val episodeUseCases: EpisodeUseCases,
+    private val locationUseCases: LocationUseCases
+): ViewModel() {
 
     private val _characters: MutableStateFlow<PagingData<CharacterModel>> = MutableStateFlow(PagingData.from(emptyList()))
     val characters: StateFlow<PagingData<CharacterModel>> = _characters
@@ -70,6 +73,9 @@ class MainViewModel @Inject constructor(
     }.stateIn(viewModelScope, SharingStarted.Lazily, PagingData.from(emptyList()))
 
     val episodes: StateFlow<PagingData<EpisodeModel>> = episodeUseCases.getAllEpisodes()
+        .stateIn(viewModelScope, SharingStarted.Eagerly, PagingData.from(emptyList()))
+
+    val locations: StateFlow<PagingData<LocationModel>> = locationUseCases.getAllLocations()
         .stateIn(viewModelScope, SharingStarted.Eagerly, PagingData.from(emptyList()))
 
     private var filtersJob: Job? = null

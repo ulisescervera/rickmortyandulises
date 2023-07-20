@@ -33,6 +33,8 @@ fun NavigationGraph(
 
     val episodes = mainViewModel.episodes.collectAsLazyPagingItems()
 
+    val locations = mainViewModel.locations.collectAsLazyPagingItems()
+
     val onQueryChanged: (String) -> Unit = {
         mainViewModel.nameFilter.value = it
     }
@@ -57,7 +59,7 @@ fun NavigationGraph(
         }
 
         composable(NavigationItem.Locations.route) {
-            LocationListScreen()
+            LocationListScreen(locations)
         }
 
         composable(NavigationItem.Detail.route) {

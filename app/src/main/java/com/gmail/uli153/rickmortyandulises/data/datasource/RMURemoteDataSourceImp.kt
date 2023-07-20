@@ -4,6 +4,7 @@ import com.gmail.uli153.rickmortyandulises.data.entities.CharacterEntity
 import com.gmail.uli153.rickmortyandulises.data.entities.ResourceIdsResponse
 import com.gmail.uli153.rickmortyandulises.data.entities.EpisodeEntity
 import com.gmail.uli153.rickmortyandulises.data.entities.EpisodeIdsRemoteResponse
+import com.gmail.uli153.rickmortyandulises.data.entities.LocationEntity
 import com.gmail.uli153.rickmortyandulises.data.services.ApiService
 import com.gmail.uli153.rickmortyandulises.data.services.GraphQLService
 import org.json.JSONObject
@@ -81,5 +82,32 @@ class RMURemoteDataSourceImp(
         } catch (e: Exception) {
             return emptyList()
         }
+    }
+
+    override suspend fun getLocationIds(page: Int): ResourceIdsResponse {
+        val query = """
+                query {
+                    locations(page: $page) {
+                        info {
+                            count
+                            pages
+                            next
+                            prev
+                        }
+                        results {
+                             id
+                        }
+                    }
+                }
+            """.trimIndent()
+        val paramObject = JSONObject()
+        paramObject.put("query", query)
+        val response = graphQLService.getLocationIds(paramObject.toString())
+        return response.body()?.data?.locations
+            ?: throw Exception("Error fetching location ids")
+    }
+
+    override suspend fun getLocations(ids: List<Long>): List<LocationEntity> {
+        return apiService.getAllLocations(ids).body() ?: throw Exception("Error fetching location ids")
     }
 }

@@ -8,10 +8,12 @@ import androidx.room.TypeConverters
 import com.gmail.uli153.rickmortyandulises.data.RMUDatabase.Companion.DATABASE_VERSION
 import com.gmail.uli153.rickmortyandulises.data.daos.CharacterDao
 import com.gmail.uli153.rickmortyandulises.data.daos.EpisodeDao
+import com.gmail.uli153.rickmortyandulises.data.daos.LocationDao
 import com.gmail.uli153.rickmortyandulises.data.entities.CharacterEntity
 import com.gmail.uli153.rickmortyandulises.data.entities.EpisodeEntity
+import com.gmail.uli153.rickmortyandulises.data.entities.LocationEntity
 
-@Database(entities = [CharacterEntity::class, EpisodeEntity::class], version = DATABASE_VERSION)
+@Database(entities = [CharacterEntity::class, EpisodeEntity::class, LocationEntity::class], version = DATABASE_VERSION)
 @TypeConverters(Converters::class)
 abstract class RMUDatabase: RoomDatabase() {
 
@@ -28,5 +30,6 @@ abstract class RMUDatabase: RoomDatabase() {
 
     abstract fun characterDao(): CharacterDao
     abstract fun episodeDao(): EpisodeDao
+    abstract fun locationDao(): LocationDao
 
 }

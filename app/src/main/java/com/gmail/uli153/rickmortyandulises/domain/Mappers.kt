@@ -3,10 +3,12 @@ package com.gmail.uli153.rickmortyandulises.domain
 import android.net.Uri
 import com.gmail.uli153.rickmortyandulises.data.entities.CharacterEntity
 import com.gmail.uli153.rickmortyandulises.data.entities.EpisodeEntity
+import com.gmail.uli153.rickmortyandulises.data.entities.LocationEntity
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterGender
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterModel
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterStatus
 import com.gmail.uli153.rickmortyandulises.domain.models.EpisodeModel
+import com.gmail.uli153.rickmortyandulises.domain.models.LocationModel
 import java.util.Date
 
 fun CharacterEntity.toModel(): CharacterModel {
@@ -31,4 +33,15 @@ fun CharacterEntity.toModel(): CharacterModel {
 fun EpisodeEntity.toModel(): EpisodeModel {
     val characterIds = this.characters.mapNotNull { Uri.parse(it).pathSegments.lastOrNull()?.toLongOrNull() }
     return EpisodeModel(this.id, this.name, this.date, characterIds)
+}
+
+fun LocationEntity.toModel(): LocationModel {
+    val residentIds = this.residents.mapNotNull { it.split("/").lastOrNull()?.toLongOrNull() }
+    return LocationModel(
+        id = this.id,
+        name = this.name,
+        type = this.type,
+        dimension = this.dimension,
+        residents = residentIds
+    )
 }

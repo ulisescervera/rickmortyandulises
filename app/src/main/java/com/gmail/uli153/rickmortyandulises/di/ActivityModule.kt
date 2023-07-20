@@ -2,6 +2,7 @@ package com.gmail.uli153.rickmortyandulises.di
 
 import com.gmail.uli153.rickmortyandulises.domain.usecases.CharacterUseCases
 import com.gmail.uli153.rickmortyandulises.domain.usecases.EpisodeUseCases
+import com.gmail.uli153.rickmortyandulises.domain.usecases.LocationUseCases
 import com.gmail.uli153.rickmortyandulises.ui.viewmodels.MainViewModel
 import dagger.Module
 import dagger.Provides
@@ -15,8 +16,12 @@ class ActivityModule {
 
     @Provides
     @ViewModelScoped
-    fun mainViewModel(characterUseCases: CharacterUseCases, episodeUseCases: EpisodeUseCases): MainViewModel {
-        return MainViewModel(characterUseCases, episodeUseCases)
+    fun mainViewModel(
+        characterUseCases: CharacterUseCases,
+        episodeUseCases: EpisodeUseCases,
+        locationUseCases: LocationUseCases
+    ): MainViewModel {
+        return MainViewModel(characterUseCases, episodeUseCases, locationUseCases)
     }
 
 }

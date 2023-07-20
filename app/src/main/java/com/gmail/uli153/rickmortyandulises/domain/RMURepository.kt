@@ -4,6 +4,7 @@ import androidx.paging.PagingData
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterModel
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterStatus
 import com.gmail.uli153.rickmortyandulises.domain.models.EpisodeModel
+import com.gmail.uli153.rickmortyandulises.domain.models.LocationModel
 import kotlinx.coroutines.flow.Flow
 
 interface RMURepository {
@@ -16,4 +17,6 @@ interface RMURepository {
     fun getAllEpisodes(): Flow<PagingData<EpisodeModel>>
 
     fun getEpisodesByIds(ids: List<Long>): Flow<List<EpisodeModel?>>
+
+    fun getAllLocations(): Flow<PagingData<LocationModel>>
 }

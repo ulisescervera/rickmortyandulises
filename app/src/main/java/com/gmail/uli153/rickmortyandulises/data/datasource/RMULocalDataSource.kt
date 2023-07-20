@@ -2,6 +2,7 @@ package com.gmail.uli153.rickmortyandulises.data.datasource
 
 import com.gmail.uli153.rickmortyandulises.data.entities.CharacterEntity
 import com.gmail.uli153.rickmortyandulises.data.entities.EpisodeEntity
+import com.gmail.uli153.rickmortyandulises.data.entities.LocationEntity
 
 interface RMULocalDataSource {
 
@@ -14,5 +15,9 @@ interface RMULocalDataSource {
     suspend fun getEpisodes(ids: List<Long>): List<EpisodeEntity>
 
     suspend fun insertEpisodes(episodes: List<EpisodeEntity>)
+
+    suspend fun getLocations(ids: List<Long>): List<LocationEntity>
+
+    suspend fun insertLocations(locations: List<LocationEntity>)
 
 }
