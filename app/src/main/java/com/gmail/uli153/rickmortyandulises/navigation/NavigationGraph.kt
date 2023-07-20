@@ -55,11 +55,11 @@ fun NavigationGraph(
         }
 
         composable(NavigationItem.Episodes.route) {
-            EpisodeListScreen(episodes)
+            EpisodeListScreen(padding, episodes)
         }
 
         composable(NavigationItem.Locations.route) {
-            LocationListScreen(locations)
+            LocationListScreen(padding, locations)
         }
 
         composable(NavigationItem.Detail.route) {

@@ -4,6 +4,8 @@
 package com.gmail.uli153.rickmortyandulises.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,16 +20,29 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.paging.compose.LazyPagingItems
 import com.gmail.uli153.rickmortyandulises.domain.models.EpisodeModel
 import com.gmail.uli153.rickmortyandulises.domain.models.LocationModel
+import com.gmail.uli153.rickmortyandulises.ui.theme.Dimens
 
 @Composable
 fun LocationListScreen(
+    padding: PaddingValues,
     locations: LazyPagingItems<LocationModel>,
 ) {
     ConstraintLayout(modifier = Modifier
         .fillMaxSize()
         .background(MaterialTheme.colorScheme.background)
     ) {
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
+        val (list) = createRefs()
+
+        LazyColumn(
+            modifier = Modifier.constrainAs(list) {
+                start.linkTo(parent.start)
+                top.linkTo(parent.top, padding.calculateTopPadding())
+                end.linkTo(parent.end)
+                bottom.linkTo(parent.bottom, padding.calculateBottomPadding())
+            },
+            contentPadding = PaddingValues(top = Dimens.vMargin, start = Dimens.hMargin, end = Dimens.hMargin, bottom = Dimens.vMargin),
+            verticalArrangement = Arrangement.spacedBy(Dimens.rowVSpace)
+        ) {
             items(locations.itemCount) {
                 val location = locations[it]
 
