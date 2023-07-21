@@ -5,6 +5,8 @@ import androidx.compose.ui.unit.dp
 object Dimens {
     val hMargin = 16.dp
     val vMargin = 16.dp
+    val rowVPadding = 12.dp
+    val rowHPadding = 12.dp
     val rowCornerRadius = 8.dp
     val rowVSpace = 12.dp
     val navigationBarHeight = 52.dp

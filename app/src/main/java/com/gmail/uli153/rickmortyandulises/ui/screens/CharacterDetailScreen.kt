@@ -45,6 +45,7 @@ import com.gmail.uli153.rickmortyandulises.domain.models.EpisodeModel
 import com.gmail.uli153.rickmortyandulises.ui.dialogs.EpisodeListDialog
 import com.gmail.uli153.rickmortyandulises.ui.theme.Dimens
 import com.gmail.uli153.rickmortyandulises.ui.viewmodels.MainViewModel
+import com.gmail.uli153.rickmortyandulises.ui.views.RelatedCharacterCell
 import com.gmail.uli153.rickmortyandulises.utils.UIState
 
 @Composable
@@ -115,9 +116,9 @@ fun CharacterDetailScreen(
                         start.linkTo(parent.start, Dimens.hMargin)
                         top.linkTo(image.bottom, Dimens.hMargin)
                         end.linkTo(parent.end, Dimens.hMargin)
-                        height = Dimension.value(60.dp)
                         width = Dimension.fillToConstraints
                     }
+                    .padding(vertical = 8.dp)
                     .clickable { episodeDialogState.value = episodeDialogState.value.not() }
             )
 
@@ -171,30 +172,5 @@ private fun EpisodeCell(episode: EpisodeModel?) {
         .aspectRatio(1f)
         .height(128.dp)) {
         Text(text = episode?.name ?: "null")
-    }
-}
-
-@Composable
-private fun RelatedCharacterCell(character: CharacterModel, onCharacterSelected: (CharacterModel) -> Unit) {
-    val imageLoader = ImageRequest.Builder(LocalContext.current)
-        .data(character.image)
-        .crossfade(true)
-        .crossfade(250)
-        .diskCachePolicy(CachePolicy.ENABLED)
-        .build()
-
-    ElevatedCard(shape = ShapeDefaults.ExtraSmall,
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .background(MaterialTheme.colorScheme.surface)
-            .clickable(onClick = { onCharacterSelected(character) })
-    ) {
-        AsyncImage(model = imageLoader,
-            contentDescription = "${character.name} image",
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f)
-        )
     }
 }

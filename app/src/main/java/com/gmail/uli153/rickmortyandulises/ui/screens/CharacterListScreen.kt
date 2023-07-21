@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -101,6 +102,7 @@ fun CharacterListScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CharacterListItem(character: CharacterModel, onCharacterClicked: (CharacterModel) -> Unit) {
     val imageLoader = ImageRequest.Builder(LocalContext.current)
@@ -111,9 +113,9 @@ private fun CharacterListItem(character: CharacterModel, onCharacterClicked: (Ch
         .build()
     ElevatedCard(modifier = Modifier
         .fillMaxWidth()
-        .fillMaxHeight(0.8f)
-        .clickable(onClick = { onCharacterClicked(character) }),
-    colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface)
+        .fillMaxHeight(0.8f),
+    colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface),
+    onClick = {onCharacterClicked(character) }
     ) {
         Row(modifier = Modifier
             .fillMaxSize()

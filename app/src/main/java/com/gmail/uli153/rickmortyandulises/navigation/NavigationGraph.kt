@@ -8,14 +8,18 @@ import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterModel
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterStatus
+import com.gmail.uli153.rickmortyandulises.domain.models.EpisodeModel
 import com.gmail.uli153.rickmortyandulises.ui.screens.CharacterDetailScreen
 import com.gmail.uli153.rickmortyandulises.ui.screens.CharacterListScreen
 import com.gmail.uli153.rickmortyandulises.ui.screens.EpisodeListScreen
 import com.gmail.uli153.rickmortyandulises.ui.screens.LocationListScreen
 import com.gmail.uli153.rickmortyandulises.ui.viewmodels.MainViewModel
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun NavigationGraph(
@@ -49,13 +53,17 @@ fun NavigationGraph(
         mainViewModel.selectCharacter(it.id)
     }
 
+    val getEpisodeCharacters: (EpisodeModel) -> Flow<PagingData<CharacterModel>> = {
+        mainViewModel.getCharacterInEpisode(it)
+    }
+
     NavHost(navController, startDestination = NavigationItem.Home.route) {
         composable(NavigationItem.Home.route) {
             CharacterListScreen(padding, showFilters, characters, nameFilter, statusFilter, onQueryChanged, onStateChanged, onCharacterClicked)
         }
 
         composable(NavigationItem.Episodes.route) {
-            EpisodeListScreen(padding, episodes)
+            EpisodeListScreen(padding, episodes, getEpisodeCharacters)
         }
 
         composable(NavigationItem.Locations.route) {
