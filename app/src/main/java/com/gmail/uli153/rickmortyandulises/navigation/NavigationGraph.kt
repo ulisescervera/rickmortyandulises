@@ -1,9 +1,13 @@
 package com.gmail.uli153.rickmortyandulises.navigation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -55,7 +59,12 @@ fun NavigationGraph(
         mainViewModel.getCharacterInEpisode(it)
     }
 
-    NavHost(navController, startDestination = NavigationItem.Home.route) {
+    NavHost(navController,
+        startDestination = NavigationItem.Home.route,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
         composable(NavigationItem.Home.route) {
             CharacterListScreen(padding, showFilters, characters, nameFilter, statusFilter, onQueryChanged, onStateChanged, onCharacterClicked)
         }

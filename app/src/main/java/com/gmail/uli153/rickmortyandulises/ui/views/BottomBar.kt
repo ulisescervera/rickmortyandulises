@@ -27,7 +27,8 @@ import com.gmail.uli153.rickmortyandulises.ui.theme.disabled
 
 @Composable
 fun BottomBar(
-    navController: NavHostController
+    navController: NavHostController,
+    onNavigateToItem: (NavigationItem) -> Unit
 ) {
     val items = NavigationItem.mainNavigationItemRoutes
 
@@ -56,20 +57,8 @@ fun BottomBar(
                 label = null,
                 selected = item.route == currentRoute,
                 colors = colors,
-                onClick = { onItemClicked(item, navController) }
+                onClick = { onNavigateToItem(item) }
             )
-        }
-    }
-}
-
-private fun onItemClicked(item: NavigationItem, navController: NavHostController) {
-    navController.navigate(item.route) {
-        navController.graph.startDestinationRoute?.let { start ->
-            popUpTo(start) {
-                saveState = true
-            }
-            launchSingleTop = true
-            restoreState = true
         }
     }
 }

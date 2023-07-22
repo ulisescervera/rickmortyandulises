@@ -10,8 +10,10 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.gmail.uli153.rickmortyandulises.navigation.NavigationGraph
+import com.gmail.uli153.rickmortyandulises.navigation.NavigationItem
 import com.gmail.uli153.rickmortyandulises.ui.viewmodels.MainViewModel
 import com.gmail.uli153.rickmortyandulises.ui.views.BottomBar
 import com.gmail.uli153.rickmortyandulises.ui.views.TopBar
@@ -23,20 +25,27 @@ fun MainScreen(
     val navController = rememberNavController()
     val showFilters: MutableState<Boolean> = remember { mutableStateOf(true) }
     val onToggleFilter = { showFilters.value = showFilters.value.not() }
+    val onNavigateToItem: (NavigationItem) -> Unit = { navigateTo(it, navController) }
 
     Scaffold(
         topBar = {
-            TopBar(navController, toggleFiltersVisibility = onToggleFilter )
+            TopBar(navController, onToggleFilter)
         },
         bottomBar = {
-            BottomBar(navController = navController)
+            BottomBar(navController, onNavigateToItem)
         }
     ) { padding ->
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-        ) {
-            NavigationGraph(navController, padding, mainViewModel, showFilters)
+        NavigationGraph(navController, padding, mainViewModel, showFilters)
+    }
+}
+
+private fun navigateTo(item: NavigationItem, navController: NavHostController) {
+    val popUpRoute = navController.currentBackStackEntry?.destination?.route ?: return
+    navController.navigate(item.route) {
+        popUpTo(popUpRoute) {
+            saveState = true
         }
+        launchSingleTop = true
+        restoreState = true
     }
 }
