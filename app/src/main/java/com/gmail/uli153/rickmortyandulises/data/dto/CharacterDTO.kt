@@ -1,6 +1,5 @@
 package com.gmail.uli153.rickmortyandulises.data.dto
 
-import androidx.room.PrimaryKey
 import com.gmail.uli153.rickmortyandulises.data.entities.CharacterLocation
 import com.gmail.uli153.rickmortyandulises.data.entities.CharacterOrigin
 import com.google.gson.annotations.SerializedName

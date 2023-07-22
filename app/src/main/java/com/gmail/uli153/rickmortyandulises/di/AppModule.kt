@@ -14,9 +14,9 @@ import com.gmail.uli153.rickmortyandulises.domain.usecases.EpisodeUseCases
 import com.gmail.uli153.rickmortyandulises.domain.usecases.LocationUseCases
 import com.gmail.uli153.rickmortyandulises.domain.usecases.character.GetAllCharacters
 import com.gmail.uli153.rickmortyandulises.domain.usecases.character.GetCharacterById
-import com.gmail.uli153.rickmortyandulises.domain.usecases.episode.GetEpisodesByIds
 import com.gmail.uli153.rickmortyandulises.domain.usecases.character.GetRelatedCharacters
 import com.gmail.uli153.rickmortyandulises.domain.usecases.episode.GetAllEpisodes
+import com.gmail.uli153.rickmortyandulises.domain.usecases.episode.GetEpisodesByIds
 import com.gmail.uli153.rickmortyandulises.domain.usecases.location.GetAllLocations
 import dagger.Module
 import dagger.Provides

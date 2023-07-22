@@ -1,6 +1,5 @@
 package com.gmail.uli153.rickmortyandulises.domain
 
-import android.net.Uri
 import com.gmail.uli153.rickmortyandulises.data.entities.CharacterEntity
 import com.gmail.uli153.rickmortyandulises.data.entities.EpisodeEntity
 import com.gmail.uli153.rickmortyandulises.data.entities.LocationEntity

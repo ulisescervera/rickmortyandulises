@@ -7,14 +7,6 @@ import com.gmail.uli153.rickmortyandulises.data.dto.LocationDTO
 import com.gmail.uli153.rickmortyandulises.data.entities.CharacterEntity
 import com.gmail.uli153.rickmortyandulises.data.entities.EpisodeEntity
 import com.gmail.uli153.rickmortyandulises.data.entities.LocationEntity
-import com.gmail.uli153.rickmortyandulises.domain.Formatters
-import com.gmail.uli153.rickmortyandulises.domain.models.CharacterGender
-import com.gmail.uli153.rickmortyandulises.domain.models.CharacterModel
-import com.gmail.uli153.rickmortyandulises.domain.models.CharacterStatus
-import com.gmail.uli153.rickmortyandulises.domain.models.EpisodeModel
-import com.gmail.uli153.rickmortyandulises.domain.models.LocationModel
-import com.gmail.uli153.rickmortyandulises.domain.toModel
-import java.util.Date
 
 fun CharacterDTO.toEntity(): CharacterEntity {
     val episodeIds = this.episodes.mapNotNull { Uri.parse(it).pathSegments.last()?.toLongOrNull() }

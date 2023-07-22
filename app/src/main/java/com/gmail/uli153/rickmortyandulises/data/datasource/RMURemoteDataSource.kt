@@ -3,10 +3,7 @@ package com.gmail.uli153.rickmortyandulises.data.datasource
 import com.gmail.uli153.rickmortyandulises.data.dto.CharacterDTO
 import com.gmail.uli153.rickmortyandulises.data.dto.EpisodeDTO
 import com.gmail.uli153.rickmortyandulises.data.dto.LocationDTO
-import com.gmail.uli153.rickmortyandulises.data.entities.CharacterEntity
 import com.gmail.uli153.rickmortyandulises.data.entities.ResourceIdsResponse
-import com.gmail.uli153.rickmortyandulises.data.entities.EpisodeEntity
-import com.gmail.uli153.rickmortyandulises.data.entities.LocationEntity
 
 interface RMURemoteDataSource {
 

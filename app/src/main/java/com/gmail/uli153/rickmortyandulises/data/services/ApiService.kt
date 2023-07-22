@@ -3,9 +3,6 @@ package com.gmail.uli153.rickmortyandulises.data.services
 import com.gmail.uli153.rickmortyandulises.data.dto.CharacterDTO
 import com.gmail.uli153.rickmortyandulises.data.dto.EpisodeDTO
 import com.gmail.uli153.rickmortyandulises.data.dto.LocationDTO
-import com.gmail.uli153.rickmortyandulises.data.entities.CharacterEntity
-import com.gmail.uli153.rickmortyandulises.data.entities.EpisodeEntity
-import com.gmail.uli153.rickmortyandulises.data.entities.LocationEntity
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
