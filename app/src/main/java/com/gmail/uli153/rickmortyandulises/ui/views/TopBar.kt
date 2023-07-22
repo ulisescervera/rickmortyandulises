@@ -41,14 +41,16 @@ fun TopBar(
     toggleFiltersVisibility: () -> Unit
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
     val items = NavigationItem.values()
     val title = items.find { it.route == navBackStackEntry?.destination?.route }?.title?.let { stringResource(id = it) } ?: ""
-    val isBaseRoute = when(navBackStackEntry?.destination?.route) {
+    val isBaseRoute = when(currentRoute) {
         NavigationItem.Home.route -> true
         NavigationItem.Episodes.route -> true
         NavigationItem.Locations.route -> true
         else -> false
     }
+    val isCharacterListRoute = currentRoute == NavigationItem.Home.route
 
     val backIconWidth = 32.dp
     val iconWidth = 24.dp
@@ -100,7 +102,7 @@ fun TopBar(
                     )
 
                     AnimatedVisibility(
-                        visible = isBaseRoute,
+                        visible = isCharacterListRoute,
                         modifier = Modifier
                             .padding(iconPadding)
                             .clickable(onClick = toggleFiltersVisibility)

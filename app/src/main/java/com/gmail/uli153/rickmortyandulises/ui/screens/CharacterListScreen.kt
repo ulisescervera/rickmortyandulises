@@ -1,5 +1,6 @@
 package com.gmail.uli153.rickmortyandulises.ui.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -24,6 +25,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ShapeDefaults
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -31,12 +34,15 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import com.gmail.uli153.rickmortyandulises.R
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterModel
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterStatus
 import com.gmail.uli153.rickmortyandulises.ui.theme.Dimens
@@ -83,19 +89,20 @@ fun CharacterListScreen(
 //        )
 
         if (showFilters.value) {
-            Box(modifier = Modifier
+            ElevatedCard(modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = Dimens.hMargin, top = topPadding, end = Dimens.hMargin)
+                .padding(start = Dimens.hMargin, top = topPadding, end = Dimens.hMargin),
+                colors = CardDefaults.elevatedCardColors(contentColor = MaterialTheme.colorScheme.surface),
+                shape = CardDefaults.elevatedShape
             ) {
                 TextField(
                     value = nameFilter.value,
                     onValueChange = onQueryChanged,
-                    placeholder = { Text("Busca por nombre") },
+                    placeholder = { Text(stringResource(id = R.string.search_by_name)) },
                     interactionSource = interactionSource,
                     singleLine = true,
-                    modifier = borderModifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.surface, shape)
+                    modifier = Modifier.fillMaxWidth()
+
                 )
             }
         }
