@@ -28,6 +28,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -95,14 +96,14 @@ fun CharacterDetailScreen(
                     }
             )
 
-            Text(text = character.name, fontSize = 22.sp,
+            Text(text = character.name, fontSize = Dimens.Font.xxl,
                 modifier = Modifier.constrainAs(name) {
                 start.linkTo(image.end, 12.dp)
                 top.linkTo(image.top)
                 end.linkTo(parent.end, Dimens.vMargin)
                 width = Dimension.fillToConstraints
             })
-            Text(text = "State: ${character.status.name}",
+            Text(text = stringResource(id = R.string.state, character.status.name),
                 modifier = Modifier.constrainAs(state) {
                 start.linkTo(image.end, 12.dp)
                 top.linkTo(name.bottom, 12.dp)
@@ -123,11 +124,10 @@ fun CharacterDetailScreen(
             )
 
             Text(text = stringResource(id = R.string.related_characters),
-                modifier = Modifier.constrainAs(episodeCountLabel) {
+                modifier = Modifier.constrainAs(relatedCharactersLabel) {
                     start.linkTo(parent.start, Dimens.hMargin)
-                    top.linkTo(image.bottom, Dimens.hMargin)
+                    top.linkTo(episodeCountLabel.bottom, Dimens.hMargin)
                     end.linkTo(parent.end, Dimens.hMargin)
-                    height = Dimension.value(60.dp)
                     width = Dimension.fillToConstraints
                 }
             )

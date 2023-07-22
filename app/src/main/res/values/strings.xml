@@ -7,4 +7,5 @@
     <string name="related_characters">Related characters</string>
     <string name="episode_count">Episodes: %d</string>
     <string name="episodes">Episodes</string>
+    <string name="state">State: %s</string>
 </resources>
