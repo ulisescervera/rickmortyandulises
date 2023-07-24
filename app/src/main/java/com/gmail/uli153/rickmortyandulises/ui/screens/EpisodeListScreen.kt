@@ -6,9 +6,12 @@ package com.gmail.uli153.rickmortyandulises.ui.screens
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
@@ -96,29 +99,20 @@ private fun EpisodeCell(
         colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface),
         onClick = { isExpanded.value = !isExpanded.value }
     ) {
-        ConstraintLayout(modifier = Modifier
+        Column(modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = Dimens.rowVPadding, horizontal = Dimens.rowHPadding)
+            .padding(horizontal = Dimens.rowHPadding, vertical = Dimens.rowVPadding)
         ) {
-            val (name, list) = createRefs()
+            Text(text = episode.name, modifier = Modifier.fillMaxWidth())
 
-            Text(text = episode.name, modifier = Modifier.constrainAs(name) {
-                start.linkTo(parent.start, Dimens.rowHPadding)
-                top.linkTo(parent.top, Dimens.rowVPadding)
-                end.linkTo(parent.end, Dimens.rowHPadding)
-            })
+            Spacer(modifier = Modifier.height(10.dp))
 
-            if (isExpanded.value) {
+            AnimatedVisibility(visible = isExpanded.value) {
                 val characters = getCharacters(episode).collectAsLazyPagingItems()
                 LazyRow(
-                    modifier = Modifier.constrainAs(list) {
-                        start.linkTo(parent.start)
-                        top.linkTo(name.bottom, 10.dp)
-                        end.linkTo(parent.end)
-                        bottom.linkTo(parent.bottom, Dimens.rowVPadding)
-                        height = Dimension.value(96.dp)
-                        width = Dimension.fillToConstraints
-                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(96.dp),
                     horizontalArrangement = Arrangement.spacedBy(Dimens.rowVSpace),
                     contentPadding = PaddingValues(horizontal = Dimens.rowHPadding)
                 ) {
