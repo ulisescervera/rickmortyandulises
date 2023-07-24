@@ -13,6 +13,7 @@ object Dimens {
     val navigationBarHeight = 52.dp
     val topNavigationMarginBottom = 10.dp
     val navigationBarHorizontalMargin = hMargin
+    val textFieldHeight = 52.dp
 
     object Font {
         val s = 14.sp
