@@ -1,4 +1,21 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.RickMortyAndUlises" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.RickMortyAndUlises" parent="Theme.SplashScreen">
+
+        <!-- Set the splash screen background, animated icon, and animation duration. -->
+        <item name="windowSplashScreenBackground">@color/primary</item>
+
+        <!-- Use windowSplashScreenAnimatedIcon to add either a drawable or an
+             animated drawable. One of these is required. -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_rick_splash</item>
+        <!-- Required for animated icons -->
+        <item name="windowSplashScreenAnimationDuration">2000</item>
+
+        <!-- Set the theme of the Activity that directly follows your splash screen. -->
+        <!-- Required -->
+        <item name="postSplashScreenTheme">@style/AppStyle</item>
+
+    </style>
+
+    <style name="AppStyle" parent="android:Theme.Material.Light.NoActionBar" />
 </resources>
