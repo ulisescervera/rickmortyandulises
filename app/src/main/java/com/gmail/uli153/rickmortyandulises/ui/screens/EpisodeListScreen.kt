@@ -51,32 +51,26 @@ fun EpisodeListScreen(
     getCharacters: (EpisodeModel) -> Flow<PagingData<CharacterModel>>,
     onCharacterClicked: (CharacterModel) -> Unit
 ) {
-    val topPadding = Dimens.vMargin + padding.calculateTopPadding() + Dimens.navigationBarHorizontalMargin
-    val bottomMargin = padding.calculateBottomPadding()
+    val listPadding = PaddingValues(
+        top = Dimens.vMargin + padding.calculateTopPadding(),
+        start = Dimens.hMargin,
+        end = Dimens.hMargin,
+        bottom = padding.calculateBottomPadding() + Dimens.vMargin
+    )
 
-    ConstraintLayout(modifier = Modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colorScheme.background)
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+        contentPadding = listPadding,
+        verticalArrangement = Arrangement.spacedBy(Dimens.rowVSpace)
     ) {
-        val (list) = createRefs()
-
-        LazyColumn(
-            modifier = Modifier.constrainAs(list) {
-                start.linkTo(parent.start)
-                top.linkTo(parent.top)
-                end.linkTo(parent.end)
-                bottom.linkTo(parent.bottom, bottomMargin)
-            },
-            contentPadding = PaddingValues(top = topPadding, start = Dimens.hMargin, end = Dimens.hMargin, bottom = Dimens.vMargin),
-            verticalArrangement = Arrangement.spacedBy(Dimens.rowVSpace)
-        ) {
-            items(episodes.itemCount, key = { episodes[it]?.id ?: 0 }) { index ->
-                val episode = episodes[index]
-                if (episode != null) {
-                    EpisodeCell(episode, getCharacters, onCharacterClicked)
-                } else {
-                    //todo shimmer?
-                }
+        items(episodes.itemCount, key = { episodes[it]?.id ?: 0 }) { index ->
+            val episode = episodes[index]
+            if (episode != null) {
+                EpisodeCell(episode, getCharacters, onCharacterClicked)
+            } else {
+                //todo shimmer?
             }
         }
     }
