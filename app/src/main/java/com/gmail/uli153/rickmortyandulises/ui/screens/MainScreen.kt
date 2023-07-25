@@ -1,15 +1,10 @@
 package com.gmail.uli153.rickmortyandulises.ui.screens
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.gmail.uli153.rickmortyandulises.navigation.NavigationGraph
@@ -41,8 +36,16 @@ fun MainScreen(
 
 private fun navigateTo(item: NavigationItem, navController: NavHostController) {
     val popUpRoute = navController.currentBackStackEntry?.destination?.route ?: return
+    val exitApp = when(item) {
+        NavigationItem.Home -> true
+        NavigationItem.Episodes -> true
+        NavigationItem.Locations -> true
+        NavigationItem.Detail -> false
+    }
+
     navController.navigate(item.route) {
         popUpTo(popUpRoute) {
+            inclusive = exitApp
             saveState = true
         }
         launchSingleTop = true
