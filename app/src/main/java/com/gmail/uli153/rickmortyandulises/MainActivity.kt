@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.gmail.uli153.rickmortyandulises.ui.screens.MainScreen
+import com.gmail.uli153.rickmortyandulises.navigation.NavigationGraph
 import com.gmail.uli153.rickmortyandulises.ui.theme.RMUTheme
 import com.gmail.uli153.rickmortyandulises.ui.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainScreen(mainViewModel)
+                    NavigationGraph(mainViewModel)
                 }
             }
         }

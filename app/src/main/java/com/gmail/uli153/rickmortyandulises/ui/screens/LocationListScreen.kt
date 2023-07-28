@@ -27,13 +27,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.gmail.uli153.rickmortyandulises.R
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterModel
-import com.gmail.uli153.rickmortyandulises.domain.models.EpisodeModel
 import com.gmail.uli153.rickmortyandulises.domain.models.LocationModel
 import com.gmail.uli153.rickmortyandulises.ui.theme.Dimens
 import com.gmail.uli153.rickmortyandulises.ui.views.RelatedCharacterCell
