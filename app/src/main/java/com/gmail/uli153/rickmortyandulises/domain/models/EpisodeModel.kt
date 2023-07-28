@@ -5,4 +5,6 @@ data class EpisodeModel(
     val name: String,
     val date: String,
     val characters: List<Long>
-)
+) {
+    val ordinalNumber: Int get() = id.toInt()
+}

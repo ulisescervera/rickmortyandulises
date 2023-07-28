@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -53,12 +54,13 @@ fun EpisodeListDialog(episodes: List<EpisodeModel?>, modifier: Modifier, dismiss
             val guideLineTop = createGuidelineFromTop(6.dp)
             val guideLineEnd = createGuidelineFromEnd(6.dp)
 
-            Text(text = stringResource(id = R.string.episodes), modifier = Modifier.constrainAs(label) {
+            Text(text = stringResource(id = R.string.episodes),
+                modifier = Modifier.constrainAs(label) {
                 start.linkTo(parent.start, Dimens.hMargin)
                 top.linkTo(parent.top, 10.dp)
                 end.linkTo(button.start, Dimens.hMargin)
                 width = Dimension.fillToConstraints
-            })
+            }, textAlign = TextAlign.Center)
 
             Box(
                 modifier = Modifier

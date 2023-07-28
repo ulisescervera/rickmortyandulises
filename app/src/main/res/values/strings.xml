@@ -9,4 +9,6 @@
     <string name="episodes">Episodes</string>
     <string name="state">State: %s</string>
     <string name="search_by_name">Search by name</string>
+    <string name="location_type">Type: %s</string>
+    <string name="location_dimension">Dimension: %s</string>
 </resources>

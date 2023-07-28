@@ -16,6 +16,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterModel
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterStatus
 import com.gmail.uli153.rickmortyandulises.domain.models.EpisodeModel
+import com.gmail.uli153.rickmortyandulises.domain.models.LocationModel
 import com.gmail.uli153.rickmortyandulises.ui.screens.CharacterDetailScreen
 import com.gmail.uli153.rickmortyandulises.ui.screens.CharacterListScreen
 import com.gmail.uli153.rickmortyandulises.ui.screens.EpisodeListScreen
@@ -53,10 +54,15 @@ fun NavigationGraph(
     }
     val onCharacterSelected: (CharacterModel) -> Unit = {
         mainViewModel.selectCharacter(it.id)
+        navController.navigate(NavigationItem.Detail.route)
     }
 
     val getEpisodeCharacters: (EpisodeModel) -> Flow<PagingData<CharacterModel>> = {
         mainViewModel.getCharacterInEpisode(it)
+    }
+
+    val getLocationCharacters: (LocationModel) -> Flow<PagingData<CharacterModel>> = {
+        mainViewModel.getCharacterInLocation(it)
     }
 
     NavHost(navController,
@@ -74,7 +80,7 @@ fun NavigationGraph(
         }
 
         composable(NavigationItem.Locations.route) {
-            LocationListScreen(padding, locations)
+            LocationListScreen(padding, locations, getLocationCharacters, onCharacterSelected)
         }
 
         composable(NavigationItem.Detail.route) {

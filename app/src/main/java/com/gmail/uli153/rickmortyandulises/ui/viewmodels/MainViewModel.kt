@@ -109,7 +109,11 @@ class MainViewModel @Inject constructor(
     }
 
     fun getCharacterInEpisode(episode: EpisodeModel): Flow<PagingData<CharacterModel>> {
-        return characterUseCases.getRelatedCharacters(null, listOf(episode))
+        return characterUseCases.getRelatedCharacters(null, listOf(episode)).cachedIn(viewModelScope)
+    }
+
+    fun getCharacterInLocation(location: LocationModel): Flow<PagingData<CharacterModel>> {
+        return characterUseCases.getCharactersInLocation(location).cachedIn(viewModelScope)
     }
 }
 

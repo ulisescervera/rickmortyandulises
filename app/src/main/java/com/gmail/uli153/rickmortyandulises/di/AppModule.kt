@@ -14,6 +14,7 @@ import com.gmail.uli153.rickmortyandulises.domain.usecases.EpisodeUseCases
 import com.gmail.uli153.rickmortyandulises.domain.usecases.LocationUseCases
 import com.gmail.uli153.rickmortyandulises.domain.usecases.character.GetAllCharacters
 import com.gmail.uli153.rickmortyandulises.domain.usecases.character.GetCharacterById
+import com.gmail.uli153.rickmortyandulises.domain.usecases.character.GetCharactersInLocation
 import com.gmail.uli153.rickmortyandulises.domain.usecases.character.GetRelatedCharacters
 import com.gmail.uli153.rickmortyandulises.domain.usecases.episode.GetAllEpisodes
 import com.gmail.uli153.rickmortyandulises.domain.usecases.episode.GetEpisodesByIds
@@ -86,7 +87,8 @@ class AppModule {
         return CharacterUseCases(
             getAllCharacters = GetAllCharacters(repository),
             getCharacterById = GetCharacterById(repository),
-            getRelatedCharacters = GetRelatedCharacters(repository)
+            getRelatedCharacters = GetRelatedCharacters(repository),
+            getCharactersInLocation = GetCharactersInLocation(repository)
         )
     }
 

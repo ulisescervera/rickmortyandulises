@@ -31,6 +31,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.runtime.toMutableStateMap
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintLayoutScope
@@ -38,6 +40,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.gmail.uli153.rickmortyandulises.R
 import com.gmail.uli153.rickmortyandulises.domain.models.CharacterModel
 import com.gmail.uli153.rickmortyandulises.domain.models.EpisodeModel
 import com.gmail.uli153.rickmortyandulises.ui.theme.Dimens
@@ -97,7 +100,7 @@ private fun EpisodeCell(
             .fillMaxWidth()
             .padding(horizontal = Dimens.rowHPadding, vertical = Dimens.rowVPadding)
         ) {
-            Text(text = episode.name, modifier = Modifier.fillMaxWidth())
+            Text(text = "#${String.format("%02d", episode.ordinalNumber)} ${episode.name}", modifier = Modifier.fillMaxWidth())
 
             Spacer(modifier = Modifier.height(10.dp))
 
