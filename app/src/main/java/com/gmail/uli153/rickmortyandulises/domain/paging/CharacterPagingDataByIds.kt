@@ -24,7 +24,7 @@ class CharacterPagingDataByIds(
         val nextPage = if (((page + 1) * pageSize) < ids.size) page + 1 else null
 
         val pageIds = if (ids.size > 0) {
-            ids.subList(page * pageSize, Math.min(ids.size - 1, page.plus(1) * pageSize))
+            ids.subList(page * pageSize, Math.min(ids.size, page.plus(1) * pageSize))
         } else ids
 
         try {
